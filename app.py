@@ -14,7 +14,7 @@ myclient = pymongo.MongoClient(
 mydb = myclient["mamamia"]
 users = mydb["users"]
 menu = mydb["menu"]
-
+orders = mydb["orders"]
 
 @app.route("/")
 def index():
@@ -121,6 +121,30 @@ def deleteMenuItem(id):
     query = {'_id':  ObjectId(id)}
     menu.delete_one(query)
     return json.dumps({'message': 'Menu item deleted successfully !'})
+
+# Read - List all orders for a user
+@app.route("/orders")
+def getOrders():
+    userId= session.get('user')
+    response = []
+    for record in orders.find({'userId': userId}):
+        record['_id'] = str(record['_id'])
+        response.append(record)
+    return json.dumps(response)
+
+# Create - add new order
+@app.route('/orders', methods=['POST'])
+def newOrderItem():
+    new = request.get_json()
+    _id = orders.insert_one(new)
+    return json.dumps({'message': 'Order item created successfully !'})
+
+# Delete - delete an order
+@app.route('/orders/<id>', methods=['DELETE'])
+def deleteOrderItem(id):
+    query = {'_id':  ObjectId(id)}
+    orders.delete_one(query)
+    return json.dumps({'message': 'Order item deleted successfully !'})
 
 
 if __name__ == "__main__":
