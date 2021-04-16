@@ -1,6 +1,7 @@
-from flask import Flask, request, json, session, render_template
+from flask import Flask, request, json, session, render_template, redirect, url_for
 from bson.objectid import ObjectId
 import pymongo
+import bcrypt
 
 # Create
 # Read
@@ -20,7 +21,8 @@ orders = mydb["orders"]
 def index():
     if 'username' in session:
         return 'You are logged in as ' + session['username']
-    return render_template('signin.html')
+    return render_template('signup.html')
+
 
 # Read - List all Users
 @app.route("/users")
@@ -34,7 +36,7 @@ def main():
 
 # Read - list and individual User
 @app.route('/users/<id>')
-def showVideo(id):
+def showUser(id):
     record = users.find_one({'_id': ObjectId(id)})
     record['_id'] = str(record['_id'])
     return json.dumps(record)
@@ -49,31 +51,50 @@ def showVideo(id):
 # 	# return json.dumps({'message': 'Video created successfully !'})
 
 # Create - add a new user
-@app.route('/users', methods=['POST'])
-def newUser():
-    new = request.get_json()
-    _id = users.insert_one(new)
-    return json.dumps({'message': 'User created successfully !'})
+@app.route('/registerUser', methods=['POST', 'GET'])
+def registerUser():
+    if request.method == 'POST':
+        existing_user = users.find_one({'username': request.form['inputName']})
+
+        if existing_user is None:
+            hashPass = bcrypt.hashpw(request.form['inputPassword'].encode('utf-8'), bcrypt.gensalt())
+            # hashPass = request.form['inputPassword']
+            users.insert_one({
+                'username': request.form['inputName'],
+                'firstName': request.form['firstName'],
+                'lastName': request.form['lastName'],
+                'password': hashPass,
+                'email': request.form['inputEmail'],
+                'phone': request.form['phone']
+            })
+            session['username'] = request.form['inputName']
+            return 'User added succesfully'
+            # return redirect(url_for(index.html));
+        return 'UserName already exists!!'
+    return render_template('signup.html')
+    # new = request.get_json()
+    # _id = users.insert_one(new)
+    # return json.dumps({'message': 'User created successfully !'})
+
 
 # Update - update an existing user
 @app.route('/users/<id>', methods=['PUT'])
-def updateVideo(id):
-
+def updateUser(id):
     # title = request.args.get('title')
     # desc  = request.args.get('desc')
     new = request.get_json()
-    query = {'_id':  ObjectId(id)}
+    query = {'_id': ObjectId(id)}
     # newvalues = { "$set": { 'title': title, "description": desc  } }
     newvalues = {"$set": new}
     users.update_one(query, newvalues)
 
     return json.dumps({'message': 'User updated successfully !'})
 
+
 # Delete - delete a user
 @app.route('/users/<id>', methods=['DELETE'])
-def deleteVideo(id):
-
-    query = {'_id':  ObjectId(id)}
+def deleteUser(id):
+    query = {'_id': ObjectId(id)}
     users.delete_one(query)
 
     return json.dumps({'message': 'User deleted successfully !'})
@@ -109,7 +130,7 @@ def newMenuItem():
 @app.route('/menu/<id>', methods=['PUT'])
 def updateMenuItem(id):
     menu_item = request.get_json()
-    query = {'_id':  ObjectId(id)}
+    query = {'_id': ObjectId(id)}
     updated_menu_item = {"$set": menu_item}
     menu.update_one(query, updated_menu_item)
     return json.dumps({'message': 'Menu item updated successfully !'})
@@ -118,7 +139,7 @@ def updateMenuItem(id):
 # Delete - delete a menu item
 @app.route('/menu/<id>', methods=['DELETE'])
 def deleteMenuItem(id):
-    query = {'_id':  ObjectId(id)}
+    query = {'_id': ObjectId(id)}
     menu.delete_one(query)
     return json.dumps({'message': 'Menu item deleted successfully !'})
 
