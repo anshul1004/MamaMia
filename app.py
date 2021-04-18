@@ -2,6 +2,7 @@ from flask import Flask, request, json, session, render_template, redirect, url_
 from bson.objectid import ObjectId
 import pymongo
 import bcrypt
+# from bcrypt import Bcrypt
 
 # Create
 # Read
@@ -9,6 +10,8 @@ import bcrypt
 # Delete
 
 app = Flask(__name__)
+# bcrypt = Bcrypt(app)
+salt= bcrypt.gensalt()
 
 myclient = pymongo.MongoClient(
     "mongodb+srv://mamamiaadmin:mamamiapassword@italianrestaurant.okus2.mongodb.net/mamamia?retryWrites=true&w=majority")
@@ -30,25 +33,49 @@ def main():
     response = []
     for record in users.find():
         record['_id'] = str(record['_id'])
+        record['password']= record['password'].decode()
         response.append(record)
+    print(response)
     return json.dumps(response)
 
-
-# Read - list and individual User
+# Read - list an individual User
 @app.route('/users/<id>')
 def showUser(id):
-    record = users.find_one({'_id': ObjectId(id)})
+    record = users.find_one({'userId': id})
     record['_id'] = str(record['_id'])
     return json.dumps(record)
 
+# Create - add a new user
+@app.route("/users", methods=['POST'])
+def addUser():
+    newUser = request.get_json()
+    newUser['password']= bcrypt.hashpw(newUser['password'].encode('utf-8'), salt)
+    users.insert_one(newUser)
+    return json.dumps({'message': 'user created successfully !'})
 
-# Create - add a new video
-# @app.route("/users", methods=['POST'])
-# def newUser():
-# # new = request.get_json()# new = { "title": title, "description": desc }
-# 	# _id = mycol.insert_one(new)
-# 	# #return json.dumps({'ObjectId for new movie':str(_id)})
-# 	# return json.dumps({'message': 'Video created successfully !'})
+# Create - edit password based on username
+@app.route("/users/<username>", methods=['PUT'])
+def editUser(username):
+    data = request.get_json()
+    query = {'username': username}
+    newPass= bcrypt.hashpw(data['password'].encode('utf-8'), salt)
+    newvalues = {"$set": {'password': newPass}}
+    users.update_one(query, newvalues)
+    return json.dumps({'message': 'user updated successfully !'})
+
+# verify password for entered username
+@app.route("/signIn", methods=['POST'])
+def verifyUser():
+    user = request.get_json()
+    record= users.find_one({'username': user['username']})
+    if record:
+        hashedPass= bcrypt.hashpw(user['password'].encode('utf-8'), salt)
+        if hashedPass==record['password']:
+            return json.dumps({'message': 'user verified!'})
+        else:
+            return json.dumps({'message': 'Username or password incorrect!'})
+    else:
+        return json.dumps({'message': 'Username or password incorrect!'})
 
 # Create - add a new user
 @app.route('/registerUser', methods=['POST', 'GET'])
@@ -75,20 +102,6 @@ def registerUser():
     # new = request.get_json()
     # _id = users.insert_one(new)
     # return json.dumps({'message': 'User created successfully !'})
-
-
-# Update - update an existing user
-@app.route('/users/<id>', methods=['PUT'])
-def updateUser(id):
-    # title = request.args.get('title')
-    # desc  = request.args.get('desc')
-    new = request.get_json()
-    query = {'_id': ObjectId(id)}
-    # newvalues = { "$set": { 'title': title, "description": desc  } }
-    newvalues = {"$set": new}
-    users.update_one(query, newvalues)
-
-    return json.dumps({'message': 'User updated successfully !'})
 
 
 # Delete - delete a user
@@ -146,7 +159,7 @@ def deleteMenuItem(id):
 # Read - List all orders for a user
 @app.route("/orders")
 def getOrders():
-    userId= session.get('user')
+    userId= session.get('userId')
     response = []
     for record in orders.find({'userId': userId}):
         record['_id'] = str(record['_id'])
