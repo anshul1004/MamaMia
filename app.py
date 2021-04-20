@@ -12,6 +12,7 @@ import bcrypt
 app = Flask(__name__)
 # bcrypt = Bcrypt(app)
 salt= bcrypt.gensalt()
+app.secret_key='secret key can be anything'
 
 myclient = pymongo.MongoClient(
     "mongodb+srv://mamamiaadmin:mamamiapassword@italianrestaurant.okus2.mongodb.net/mamamia?retryWrites=true&w=majority")
@@ -22,8 +23,8 @@ orders = mydb["orders"]
 
 @app.route("/")
 def index():
-    if 'username' in session:
-        return 'You are logged in as ' + session['username']
+    # if 'username' in session:
+    #     return 'You are logged in as ' + session['username']
     return render_template('signup.html')
 
 
@@ -49,7 +50,8 @@ def showUser(id):
 @app.route("/users", methods=['POST'])
 def addUser():
     newUser = request.get_json()
-    newUser['password']= bcrypt.hashpw(newUser['password'].encode('utf-8'), salt)
+    # encode, hash, decode before storing in db
+    newUser['password']= bcrypt.hashpw(newUser['password'].encode('utf-8'), salt).decode('utf-8')
     users.insert_one(newUser)
     return json.dumps({'message': 'user created successfully !'})
 
@@ -58,51 +60,58 @@ def addUser():
 def editUser(username):
     data = request.get_json()
     query = {'username': username}
-    newPass= bcrypt.hashpw(data['password'].encode('utf-8'), salt)
+    # encode, hash, decode before storing in db
+    newPass= bcrypt.hashpw(data['password'].encode('utf-8'), salt).decode('utf-8')
     newvalues = {"$set": {'password': newPass}}
     users.update_one(query, newvalues)
-    return json.dumps({'message': 'user updated successfully !'})
+    return json.dumps({'message': 'user updated successfully !'+ data['password']})
+
+@app.route("/showSignin")
+def showSignin():
+    # if 'username' in session:
+    #     return 'You are logged in as ' + session['username']
+    return render_template('signin.html')
 
 # verify password for entered username
-@app.route("/signIn", methods=['POST'])
+@app.route("/validateSignIn", methods=['POST'])
 def verifyUser():
-    user = request.get_json()
-    record= users.find_one({'username': user['username']})
+    # user = request.get_json()
+    _username = request.form['inputUsername']
+    _password = request.form['inputPassword']
+    record= users.find_one({'username': _username})
     if record:
-        hashedPass= bcrypt.hashpw(user['password'].encode('utf-8'), salt)
-        if hashedPass==record['password']:
+        # encode the entered password and db password before checking 
+        if bcrypt.checkpw(_password.encode('utf-8'), record['password'].encode('utf-8')):
+            #setting session username
+            session['username']= _username
             return json.dumps({'message': 'user verified!'})
         else:
-            return json.dumps({'message': 'Username or password incorrect!'})
+            return json.dumps({'message': 'Password incorrect!'})
     else:
-        return json.dumps({'message': 'Username or password incorrect!'})
+        return json.dumps({'message': 'Username doesnt exist'})
 
 # Create - add a new user
-@app.route('/registerUser', methods=['POST', 'GET'])
-def registerUser():
+@app.route('/signUp', methods=['POST', 'GET'])
+def signUp():
     if request.method == 'POST':
-        existing_user = users.find_one({'username': request.form['inputName']})
+        existing_user = users.find_one({'username': request.form['inputUsername']})
 
         if existing_user is None:
-            hashPass = bcrypt.hashpw(request.form['inputPassword'].encode('utf-8'), bcrypt.gensalt())
-            # hashPass = request.form['inputPassword']
+            hashPass = bcrypt.hashpw(request.form['inputPassword'].encode('utf-8'), salt).decode('utf-8')
             users.insert_one({
-                'username': request.form['inputName'],
-                'firstName': request.form['firstName'],
-                'lastName': request.form['lastName'],
-                'password': hashPass,
+                'username': request.form['inputUsername'],
                 'email': request.form['inputEmail'],
-                'phone': request.form['phone']
+                'password': hashPass
+                # 'firstName': request.form['firstName'],
+                # 'lastName': request.form['lastName'],
+                # 'phone': request.form['phone']
             })
-            session['username'] = request.form['inputName']
-            return 'User added succesfully'
-            # return redirect(url_for(index.html));
-        return 'UserName already exists!!'
-    return render_template('signup.html')
-    # new = request.get_json()
-    # _id = users.insert_one(new)
-    # return json.dumps({'message': 'User created successfully !'})
-
+            session['username'] = request.form['inputUsername']
+            print('User added succesfully')
+        else:
+            print('UserName already exists!!')
+    # return redirect('/showSignin')
+    return render_template('signin.html')
 
 # Delete - delete a user
 @app.route('/users/<id>', methods=['DELETE'])
