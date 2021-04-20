@@ -9,3 +9,5 @@ password
 Signin page:
 username or email address
 password
+
+All users password: password 
