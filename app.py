@@ -25,7 +25,7 @@ orders = mydb["orders"]
 def index():
     # if 'username' in session:
     #     return 'You are logged in as ' + session['username']
-    return render_template('signup.html')
+    return render_template('register.html')
 
 
 # Read - List all Users
@@ -73,11 +73,11 @@ def showSignin():
     return render_template('signin.html')
 
 # verify password for entered username
-@app.route("/validateSignIn", methods=['POST'])
+@app.route("/signin", methods=['POST'])
 def verifyUser():
     # user = request.get_json()
-    _username = request.form['inputUsername']
-    _password = request.form['inputPassword']
+    _username = request.form['username']
+    _password = request.form['password']
     record= users.find_one({'username': _username})
     if record:
         # encode the entered password and db password before checking 
@@ -91,27 +91,28 @@ def verifyUser():
         return json.dumps({'message': 'Username doesnt exist'})
 
 # Create - add a new user
-@app.route('/signUp', methods=['POST', 'GET'])
+@app.route('/signup', methods=['POST', 'GET'])
 def signUp():
     if request.method == 'POST':
-        existing_user = users.find_one({'username': request.form['inputUsername']})
+        username= request.form['RegisterUsername']
+        existing_user = users.find_one({'username': username})
 
         if existing_user is None:
-            hashPass = bcrypt.hashpw(request.form['inputPassword'].encode('utf-8'), salt).decode('utf-8')
+            hashPass = bcrypt.hashpw(request.form['RegisterPassword'].encode('utf-8'), salt).decode('utf-8')
             users.insert_one({
-                'username': request.form['inputUsername'],
-                'email': request.form['inputEmail'],
+                'username': username,
+                'email': request.form['RegisterEmail'],
                 'password': hashPass
                 # 'firstName': request.form['firstName'],
                 # 'lastName': request.form['lastName'],
                 # 'phone': request.form['phone']
             })
-            session['username'] = request.form['inputUsername']
+            session['username'] = username
             print('User added succesfully')
         else:
             print('UserName already exists!!')
     # return redirect('/showSignin')
-    return render_template('signin.html')
+    # return render_template('signin.html')
 
 # Delete - delete a user
 @app.route('/users/<id>', methods=['DELETE'])

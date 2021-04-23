@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mamamia Restaurant</title>
+    <!-- Required meta tags-->
+	<meta charset="utf-8">
+	<meta name="viewport" content="	width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link href="../static/register.css" rel="stylesheet"/>
+</head>
+<body>		
+    <div id="wrapper" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="../static/banner.jpg" class="img-fluid" alt="food pic"/>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <h2 class="title"><span class="text"><strong>Login</strong></span></h4>
+                <form action="/signin" method="post">
+                    <label for="username">Username</label>
+                    <input type="text" placeholder="Enter your username" id="username" class="form-control">
+                    <br>
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Enter your password" id="password" class="form-control">
+                    <br>
+                    <button id="btnSignIn" class="btn btn-block" type="submit">Sign in</button>
+                    <br>
+                    <p class="reset">Recover your <a tabindex="4" href="#" title="Recover your username or password">username or password</a></p>
+                </form>				
+            </div>
+            <div class="col-md-2"></div>	
+            <div class="col-md-4">	
+                <h2 class="title"><span class="text"><strong>Register</strong></span></h4>
+                <form action="/signup" method="post">
+                    <label for="RegisterUsername">Username</label>
+                    <input type="text" placeholder="Enter your username" id="RegisterUsername" class="form-control">
+                    <br>
+                    <label for="RegisterEmail">Email address:</label>
+                    <input type="email" placeholder="Enter your email" id="RegisterEmail" class="form-control">
+                    <br>
+                    <label for="RegisterPassword">Password</label>
+                    <input type="password" placeholder="Enter your password" id="RegisterPassword" class="form-control">
+                    <br>
+                    <button id="btnSignUp" class="btn btn-block" type="submit">Create your account</button>
+                </form>									
+            </div>
+            <div class="col-md-1"></div>				
+        </div>
+    </div>				
+</body>
+</html>
