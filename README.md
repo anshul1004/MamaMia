@@ -19,3 +19,5 @@ on sign in session username is set
 
 Error:
 from signup not able to render sign in, instead the page content is showing in console. 
+
+Added Registration UI page
