@@ -28,6 +28,13 @@ def index():
     return render_template('register.html')
 
 
+@app.route("/showCart")
+def showCart() {
+    if 'username' in session:
+        return render_template('cart.html')
+    return render_template('signin.html')
+}
+
 # Read - List all Users
 @app.route("/users")
 def main():
@@ -84,6 +91,7 @@ def verifyUser():
         if bcrypt.checkpw(_password.encode('utf-8'), record['password'].encode('utf-8')):
             #setting session username
             session['username']= _username
+            session['status']='loggedIn'
             return json.dumps({'message': 'user verified!'})
         else:
             return json.dumps({'message': 'Password incorrect!'})
@@ -109,6 +117,7 @@ def signUp():
             })
             session['username'] = username
             print('User added succesfully')
+            return render_template('signin.html')
         else:
             print('UserName already exists!!')
     # return redirect('/showSignin')
