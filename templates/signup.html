@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Basic -->
 
 <head>
     <meta charset="utf-8">
@@ -26,11 +27,6 @@
     <link rel="stylesheet" href="../static/css/responsive.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.../static/js/1.4.2/respond.min.js"></script>
-    <![endif]-->
     <script src="../static/js/first.js"></script>
 </head>
 
@@ -48,14 +44,14 @@
                         </ul>
                     </div>
                 </div>
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 					<div class="login-box">
 						<select id="basic" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-							<option value="signup">Register Here</option>
-							<option value="signin">Sign In</option>
+							<option>Register Here</option>
+							<option>Sign In</option>
 						</select>
 					</div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -80,7 +76,7 @@
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
                         <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
-                        <!-- <li class="dropdown">
+                        <li class="dropdown">
                             <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
                             <ul class="dropdown-menu">
 								<li><a href="shop.html">Sidebar Shop</a></li>
@@ -88,23 +84,57 @@
                                 <li><a href="cart.html">Cart</a></li>
                                 <li><a href="checkout.html">Checkout</a></li>
                                 <li><a href="my-account.html">My Account</a></li>
-                                <li><a href="wishlist.html">Wishlist</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li> -->
+                        <!-- <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li> -->
                         <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
 
                 <!-- Start Atribute Navigation -->
-                <!-- <div class="attr-nav">
+                <div class="attr-nav">
                     <ul>
                         <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+                        <li class="side-menu">
+							<a href="#">
+								<i class="fa fa-shopping-bag"></i>
+								<span class="badge">3</span>
+								<p>My Cart</p>
+							</a>
+						</li>
                     </ul>
-                </div> -->
+                </div>
                 <!-- End Atribute Navigation -->
             </div>
+            <!-- Start Side Menu -->
+            <div class="side">
+                <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+                <li class="cart-box">
+                    <ul class="cart-list">
+                        <!-- <li>
+                            <a href="#" class="photo"><img src="../static/images/img-pro-01.jpg" class="cart-thumb" alt="" /></a>
+                            <h6><a href="#">Delica omtantur </a></h6>
+                            <p>1x - <span class="price">$80.00</span></p>
+                        </li>
+                        <li>
+                            <a href="#" class="photo"><img src="../static/images/img-pro-02.jpg" class="cart-thumb" alt="" /></a>
+                            <h6><a href="#">Omnes ocurreret</a></h6>
+                            <p>1x - <span class="price">$60.00</span></p>
+                        </li>
+                        <li>
+                            <a href="#" class="photo"><img src="../static/images/img-pro-03.jpg" class="cart-thumb" alt="" /></a>
+                            <h6><a href="#">Agam facilisis</a></h6>
+                            <p>1x - <span class="price">$40.00</span></p>
+                        </li>
+                        <li class="total">
+                            <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                            <span class="float-right"><strong>Total</strong>: $180.00</span>
+                        </li> -->
+                    </ul>
+                </li>
+            </div>
+            <!-- End Side Menu -->
         </nav>
         <!-- End Navigation -->
     </header>
@@ -122,57 +152,32 @@
     </div>
     <!-- End Top Search -->
 
-    <!-- Start Slider -->
-    <div id="slides-shop" class="cover-slides">
-        <ul class="slides-container">
-            <li class="text-center">
-                <img src="../static/images/banner-01.jpg" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> MaMaMia</strong></h1>
-                            <p class="m-b-40">A place for enjoying the best italian delicacies.</p>
-                            <p><a class="btn hvr-hover" href="signin.html">SignIn</a> 
-                                <a class="btn hvr-hover" href="signup.html">SignUp</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="text-center">
-                <img src="../static/images/banner-02.jpg" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> MaMaMia</strong></h1>
-                            <p class="m-b-40">A place for enjoying the best italian delicacies.</p>
-                            <p><a class="btn hvr-hover" href="signin.html">SignIn</a> 
-                                <a class="btn hvr-hover" href="signup.html">SignUp</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="text-center">
-                <img src="../static/images/banner-03.jpg" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> MaMaMia</strong></h1>
-                            <p class="m-b-40">A place for enjoying the best italian delicacies.</p>
-                            <p><a class="btn hvr-hover" href="signin.html">SignIn</a> 
-                                <a class="btn hvr-hover" href="signup.html">SignUp</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <div class="slides-navigation">
-            <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
-            <a href="#" class="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+    <!-- UserSignUp Page start-->
+    <div class="jumbotron container">
+        <div class="row">
+            <div class="col align-self-start">
+            </div>
+            <div class="col align-self-center">
+                <form class="form-signup">
+                    <label for="inputUsername" class="sr-only">Username</label>
+                    <input type="username" name="inputUsername" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+                    <br/>
+                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                    <br/>
+                    <label for="inputPassword" class="sr-only">Password</label>
+                    <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <br/>
+                    <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+                </form>
+            </div>
+            <div class="col align-self-end">
+            </div>
         </div>
-    </div>
-    <!-- End Slider -->
+      </div>
+    <!-- UserSignUp Page end -->
 
-    <!--Footer start-->
+    <!--Footer starts-->
     <footer>
         <div class="footer-main">
             <div class="container">
@@ -255,6 +260,7 @@
             </div>
         </div>
     </footer>
+    <!-- End Footer  -->
 
     <!-- Start copyright  -->
     <div class="footer-copyright">
