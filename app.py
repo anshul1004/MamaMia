@@ -29,6 +29,8 @@ def index():
     #     return 'You are logged in as ' + session['email']
     return render_template('index.html')
 
+
+
 @app.route("/showSignUp")
 def showSignUp():
     return render_template('signup.html')

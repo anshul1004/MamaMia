@@ -2188,7 +2188,7 @@
 }
  .new-account-login h5 {
      font-size: 18px;
-     color: #1111111;
+     color: #111111;
      font-weight: 600;
 }
  .new-account-login h5 a:hover{
@@ -2597,23 +2597,20 @@
 	border: none;
 }
 
+.new-menu-item {
+    color: white;
+}
 
+.new-menu-item-save-changes {
+    color: white;
+}
 
+.new-menu-item-cancel {
+    color: white;
+    background: grey;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.new-menu-item-error {
+	background: #fcc;
+	border: 2px solid #c99;
+}
