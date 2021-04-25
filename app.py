@@ -25,10 +25,22 @@ orders = mydb["orders"]
 
 @app.route("/")
 def index():
-    # if 'email' in session:
-    #     return 'You are logged in as ' + session['email']
+    if 'email' in session:
+        return render_template('landingPage.html')
     return render_template('index.html')
 
+@app.route("/aboutUs")
+def showAboutUs():
+    return render_template('about.html')
+
+@app.route("/contactUs")
+def showContactUs():
+    return render_template('contact-us.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('email',None)
+    return redirect('/')
 
 @app.route("/showSignUp")
 def showSignUp():
@@ -36,15 +48,15 @@ def showSignUp():
 
 @app.route("/showSignIn")
 def showSignIn():
-    # if 'email' in session:
-    #     return render_template('landingPage.html')
+    if 'email' in session:
+        return render_template('landingPage.html')
     return render_template('signin.html')
 
 @app.route("/userLandingPage")
 def userHome():
     if 'email' in session:
         return render_template('landingPage.html')
-    return render_template('signin.html')
+    return render_template('index.html')
 
 # SignUp feature
 # If already user exists in backend show message
@@ -63,7 +75,8 @@ def signUp():
                     request.form['inputPassword'].encode('utf-8'), salt).decode('utf-8')
                 users.insert_one({
                     'email': email,
-                    'password': hashPass
+                    'password': hashPass,
+                    'isAdmin': False
                 })
                 session['email'] = email
                 return json.dumps({"message":"User Created Suucesfully"})
@@ -88,7 +101,6 @@ def verifyUser():
         if bcrypt.checkpw(password.encode('utf-8'), record['password'].encode('utf-8')):
             # setting session username
             session['email'] = email
-            session['status'] = 'loggedIn'
             return json.dumps({'message': 'user verified!'})
         else:
             return json.dumps({'message': 'Password incorrect!'})
@@ -99,13 +111,28 @@ def verifyUser():
 
 @app.route("/showCart")
 def showCart():
-    if 'username' in session:
+    if 'email' in session:
         return render_template('cart.html')
     return render_template('signin.html')
 
+@app.route("/checkout")
+def checkout():
+    if 'email' in session:
+        return render_template('checkout.html')
+    return render_template('signin.html')
+
+
+
+@app.route("/getCartItems")
+def getCartItems():
+    email = session.get('email')
+    cartItems = []
+    for record in cart.find({'email': email}):
+        record['_id'] = str(record['_id'])
+        response.append(record)
+    return json.dumps(response)
+
 # Read - List all Users
-
-
 @app.route("/users")
 def main():
     response = []
@@ -150,38 +177,6 @@ def editUser(username):
     newvalues = {"$set": {'password': newPass}}
     users.update_one(query, newvalues)
     return json.dumps({'message': 'user updated successfully !' + data['password']})
-
-
-# @app.route("/showSignin")
-# def showSignin():
-#     # if 'username' in session:
-#     #     return 'You are logged in as ' + session['username']
-#     return render_template('signin.html')
-
-# verify password for entered username
-
-
-# @app.route("/signin", methods=['POST'])
-# def verifyUser():
-#     # user = request.get_json()
-#     _username = request.form['username']
-#     _password = request.form['password']
-#     record = users.find_one({'username': _username})
-#     if record:
-#         # encode the entered password and db password before checking
-#         if bcrypt.checkpw(_password.encode('utf-8'), record['password'].encode('utf-8')):
-#             # setting session username
-#             session['username'] = _username
-#             session['status'] = 'loggedIn'
-#             return json.dumps({'message': 'user verified!'})
-#         else:
-#             return json.dumps({'message': 'Password incorrect!'})
-#     else:
-#         return json.dumps({'message': 'Username doesnt exist'})
-
-# Create - add a new user
-
-
 
 
 # Delete - delete a user
