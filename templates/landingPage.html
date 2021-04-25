@@ -28,6 +28,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css">
 
+    <link rel="stylesheet" href="../static/mamamiaCss/admincrud.css">
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -101,6 +103,7 @@
                         <label for="newMenuItemName" class="control-label">Name</label>
                         <input type="name" name="newMenuItemName" id="newMenuItemName" class="form-control"
                             placeholder="Enter Name" required />
+                        <p id="newMenuItemNameError" class="helper-text-invisible">Please enter Name!</p>
                         <label for="newMenuItemCategory">Category</label>
                         <select class="form-control" id="newMenuItemCategory">
                             <option>Appetizer</option>
@@ -121,6 +124,7 @@
                         <label for="newMenuItemPrice" class="control-label">Price ($)</label>
                         <input type="name" name="newMenuItemPrice" id="newMenuItemPrice" class="form-control"
                             placeholder="Enter Price" required />
+                        <p id="newMenuItemPriceError" class="helper-text-invisible">Please enter correct Price!</p>
                         <label for="newMenuItemImage" class="control-label">Upload Image</label>
                         <input type="file" class="form-control-file" id="newMenuItemImage">
                     </form>
@@ -172,9 +176,9 @@
                         <div class="product-categorie-box">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
-                                    <div class="row" id="todo-table">
-                                        
-                                        
+                                    <div class="row" id="menu-items-grid-view">
+
+
                                         <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                             <div class="products-single fix">
                                                 <div class="box-img-hover">

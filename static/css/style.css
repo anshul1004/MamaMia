@@ -2596,21 +2596,3 @@
 	padding: 12px 25px;
 	border: none;
 }
-
-.new-menu-item {
-    color: white;
-}
-
-.new-menu-item-save-changes {
-    color: white;
-}
-
-.new-menu-item-cancel {
-    color: white;
-    background: grey;
-}
-
-.new-menu-item-error {
-	background: #fcc;
-	border: 2px solid #c99;
-}

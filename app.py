@@ -30,8 +30,6 @@ def index():
     return render_template('index.html')
 
 
-
-
 @app.route("/showSignUp")
 def showSignUp():
     return render_template('signup.html')
@@ -219,6 +217,12 @@ def getMenuItem(id):
 @app.route('/menu', methods=['POST'])
 def newMenuItem():
     new_menu_item = request.get_json()
+
+    if new_menu_item['name'] == "" or new_menu_item['name'] == None:
+        return json.dumps({'message': 'Error: Menu item name is missing!'})
+    elif new_menu_item['name'] == "" or new_menu_item['name'] == None:
+        return json.dumps({'message': 'Error: Menu item price is missing!'})
+
     _id = menu.insert_one(new_menu_item)
     return json.dumps({'message': 'Menu item created successfully !'})
 

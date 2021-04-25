@@ -1,0 +1,23 @@
+.new-menu-item {
+    color: white;
+}
+
+.new-menu-item-save-changes {
+    color: white;
+}
+
+.new-menu-item-cancel {
+    color: white;
+    background: grey;
+}
+
+.helper-text-invisible{
+    display: none;
+}
+.helper-text-visible{
+    display: block;
+}
+.input-border-color {
+    border-color: red;
+    border-style: solid;
+}
