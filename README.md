@@ -2,22 +2,21 @@
 
 Signup page:
 
-username
 email
 password
 
 Signin page:
-username or email address
+email address
 password
 
-All users password: password 
+All users password: Pass@word1
 
 Passwords are encoded, hashed, decoded before storing in database. 
 For login verification, entered password and db password are first encoded. 
 
-on sign in session username is set
+on sign in session email is set
 
 Error:
-from signup not able to render sign in, instead the page content is showing in console. 
+from signup not able to render sign in, instead the page content is showing in console. (Solved)
 
 Added Registration UI page
