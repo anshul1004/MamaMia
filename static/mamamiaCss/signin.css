@@ -1,0 +1,10 @@
+.helper-text-invisible{
+    display: none;
+}
+.helper-text-visible{
+    display: block;
+}
+.input-border-color {
+    border-color: red;
+    border-style: solid;
+}

@@ -1,7 +1,8 @@
-from flask import Flask, request, json, session, render_template, redirect, url_for
+from flask import Flask, request, json, session, render_template, redirect, url_for, flash
 from bson.objectid import ObjectId
 import pymongo
 import bcrypt
+import re
 # from bcrypt import Bcrypt
 
 # Create
@@ -24,9 +25,75 @@ orders = mydb["orders"]
 
 @app.route("/")
 def index():
-    # if 'username' in session:
-    #     return 'You are logged in as ' + session['username']
+    # if 'email' in session:
+    #     return 'You are logged in as ' + session['email']
     return render_template('index.html')
+
+@app.route("/showSignUp")
+def showSignUp():
+    return render_template('signup.html')
+
+@app.route("/showSignIn")
+def showSignIn():
+    # if 'email' in session:
+    #     return render_template('landingPage.html')
+    return render_template('signin.html')
+
+@app.route("/userLandingPage")
+def userHome():
+    if 'email' in session:
+        return render_template('landingPage.html')
+    return render_template('signin.html')
+
+# SignUp feature
+# If already user exists in backend show message
+# else register the user
+@app.route('/signUp', methods=['POST', 'GET'])
+def signUp():
+    if request.method == 'POST':
+        email = request.form['inputEmail']
+        password = request.form['inputPassword']
+        regex_email = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+        regex_passwd = "^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$"
+        if re.search(regex_email, email) and re.findall(regex_passwd, password):
+            existing_user = users.find_one({'email': email})
+            if existing_user is None:
+                hashPass = bcrypt.hashpw(
+                    request.form['inputPassword'].encode('utf-8'), salt).decode('utf-8')
+                users.insert_one({
+                    'email': email,
+                    'password': hashPass
+                })
+                session['email'] = email
+                return json.dumps({"message":"User Created Suucesfully"})
+            else:
+                # flash('UserName already exists!!')
+                return json.dumps({"message":"User already exists"})
+        else:
+            return json.dumps({"error":"Invalid Credentials"})
+
+
+# SignIn feature
+# Verify if the User credentials are correct
+# If correct go to landingPage otherwise show alert messages with validation messages.
+@app.route("/signIn", methods=['POST'])
+def verifyUser():
+    # user = request.get_json()
+    email = request.form['inputUsername']
+    password = request.form['inputPassword']
+    record = users.find_one({'email': email})
+    if record:
+        # encode the entered password and db password before checking
+        if bcrypt.checkpw(password.encode('utf-8'), record['password'].encode('utf-8')):
+            # setting session username
+            session['email'] = email
+            session['status'] = 'loggedIn'
+            return json.dumps({'message': 'user verified!'})
+        else:
+            return json.dumps({'message': 'Password incorrect!'})
+    else:
+        return json.dumps({'message': 'Username doesnt exist'})
+
 
 
 @app.route("/showCart")
@@ -84,60 +151,37 @@ def editUser(username):
     return json.dumps({'message': 'user updated successfully !' + data['password']})
 
 
-@app.route("/showSignin")
-def showSignin():
-    # if 'username' in session:
-    #     return 'You are logged in as ' + session['username']
-    return render_template('signin.html')
+# @app.route("/showSignin")
+# def showSignin():
+#     # if 'username' in session:
+#     #     return 'You are logged in as ' + session['username']
+#     return render_template('signin.html')
 
 # verify password for entered username
 
 
-@app.route("/signin", methods=['POST'])
-def verifyUser():
-    # user = request.get_json()
-    _username = request.form['username']
-    _password = request.form['password']
-    record = users.find_one({'username': _username})
-    if record:
-        # encode the entered password and db password before checking
-        if bcrypt.checkpw(_password.encode('utf-8'), record['password'].encode('utf-8')):
-            # setting session username
-            session['username'] = _username
-            session['status'] = 'loggedIn'
-            return json.dumps({'message': 'user verified!'})
-        else:
-            return json.dumps({'message': 'Password incorrect!'})
-    else:
-        return json.dumps({'message': 'Username doesnt exist'})
+# @app.route("/signin", methods=['POST'])
+# def verifyUser():
+#     # user = request.get_json()
+#     _username = request.form['username']
+#     _password = request.form['password']
+#     record = users.find_one({'username': _username})
+#     if record:
+#         # encode the entered password and db password before checking
+#         if bcrypt.checkpw(_password.encode('utf-8'), record['password'].encode('utf-8')):
+#             # setting session username
+#             session['username'] = _username
+#             session['status'] = 'loggedIn'
+#             return json.dumps({'message': 'user verified!'})
+#         else:
+#             return json.dumps({'message': 'Password incorrect!'})
+#     else:
+#         return json.dumps({'message': 'Username doesnt exist'})
 
 # Create - add a new user
 
 
-@app.route('/signup', methods=['POST', 'GET'])
-def signUp():
-    if request.method == 'POST':
-        username = request.form['RegisterUsername']
-        existing_user = users.find_one({'username': username})
 
-        if existing_user is None:
-            hashPass = bcrypt.hashpw(
-                request.form['RegisterPassword'].encode('utf-8'), salt).decode('utf-8')
-            users.insert_one({
-                'username': username,
-                'email': request.form['RegisterEmail'],
-                'password': hashPass
-                # 'firstName': request.form['firstName'],
-                # 'lastName': request.form['lastName'],
-                # 'phone': request.form['phone']
-            })
-            session['username'] = username
-            print('User added succesfully')
-            return render_template('signin.html')
-        else:
-            print('UserName already exists!!')
-    # return redirect('/showSignin')
-    # return render_template('signin.html')
 
 # Delete - delete a user
 

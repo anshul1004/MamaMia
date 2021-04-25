@@ -27,10 +27,11 @@
     <link rel="stylesheet" href="../static/css/responsive.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css">
-    <script src="../static/js/first.js"></script>
 
+    <link rel="stylesheet" href="../static/mamamiaCss/signup.css">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../static/mamamiaJs/first.js"></script>
 </head>
 
 <body>
@@ -161,15 +162,23 @@
             <div class="col align-self-start">
             </div>
             <div class="col align-self-center">
-                <form class="form-signup">
-                    <label for="inputUsername" class="sr-only">Username</label>
+                <form name="signupform" class="form-signin">
+                    <!-- <label for="inputUsername" class="sr-only">Username</label>
                     <input type="username" name="inputUsername" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-                    <br/>
+                    <p id="helper-text-username" class="helper-text-invisible">Username is Required or already taken</p>
+                    <br/> -->
                     <label for="inputEmail" class="sr-only">Email address</label>
                     <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                    <p id="helper-text-email" class="helper-text-invisible">Email is empty or incorrect</p>
                     <br/>
                     <label for="inputPassword" class="sr-only">Password</label>
                     <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <p id="helper-text-password" class="helper-text-invisible">Password is Required. Password should have <br/>
+                    atleast 8 charcters<br/>
+                    1 number<br/>
+                    1 lowercase<br/>
+                    1 uppercase<br/>
+                    1 special character<br/></p>
                     <br/>
                     <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
                 </form>

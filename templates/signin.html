@@ -27,10 +27,11 @@
     <link rel="stylesheet" href="../static/css/responsive.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css">
-    <script src="../static/js/first.js"></script>
 
+    <link rel="stylesheet" href="../static/mamamiaCss/signin.css">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../static/mamamiaJs/signin.js"></script>
 </head>
 
 <body>
@@ -164,10 +165,10 @@
                 <form class="form-signin">
                     <label for="inputUsername" class="sr-only">Username</label>
                     <input type="username" name="inputUsername" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-                    <br/>
+                    <p id="helper-text-signin-email" class="helper-text-invisible">Invalid Email/UserName</p><br/>
                     <label for="inputPassword" class="sr-only">Password</label>
                     <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <br/>
+                    <p id="helper-text-signin-password" class="helper-text-invisible">Invalid Password</p><br/>
                     <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
                 </form>
             </div>
