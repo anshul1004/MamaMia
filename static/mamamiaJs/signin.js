@@ -39,7 +39,7 @@ $(document).ready(function(){
                             password.classList.remove("input-border-color")
                         }
                     if(res.message == "user verified!") 
-                        window.location.href = "/userLandingPage";
+                        window.location.href = "/dashboard";
             },
             error: function(error) {
                 console.log(error);

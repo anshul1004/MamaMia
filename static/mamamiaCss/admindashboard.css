@@ -14,10 +14,30 @@
 .helper-text-invisible{
     display: none;
 }
+
 .helper-text-visible{
     display: block;
 }
+
 .input-border-color {
     border-color: red;
     border-style: solid;
+}
+
+.edit-menu-item-save-changes {
+    color: white;
+}
+
+.edit-menu-item-cancel {
+    color: white;
+    background: grey;
+}
+
+.delete-menu-item-yes {
+    color: white;
+}
+
+.delete-menu-item-no {
+    color: white;
+    background: grey;
 }

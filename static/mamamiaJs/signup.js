@@ -60,7 +60,7 @@ $(document).ready(function(){
                                 alert("Email or Password wrong");
                             }
                         else 
-                            window.location.href = "/userLandingPage";
+                            window.location.href = "/dashboard";
                 },
                 error: function(error) {
                     console.log(error);
