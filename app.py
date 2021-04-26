@@ -21,6 +21,7 @@ mydb = myclient["mamamia"]
 users = mydb["users"]
 menu = mydb["menu"]
 orders = mydb["orders"]
+cart = mydb["cart"]
 
 
 @app.route("/")
@@ -123,25 +124,39 @@ def checkout():
 
 
 
-@app.route("/getCartItems")
-def getCartItems():
+@app.route("/getCart")
+def getCart():
     email = session.get('email')
-    cartItems = []
-    for record in cart.find({'email': email}):
-        record['_id'] = str(record['_id'])
-        response.append(record)
+    response = cart.find_one({'email': email})
+    response['_id'] = str(response['_id'])
+    # for record in cart.find({'email': email}):
+    #     record['_id'] = str(record['_id'])
+    #     response.append(record)
     return json.dumps(response)
 
+
+@app.route("/updateCart", methods=['PUT'])
+def updateCart():
+    print("###########################################################################")
+    print(request.get_json())
+    data = request.get_json()
+    email = data['email']
+    query = {'email': email}
+    items = data['items']
+    newvalues = {"$set": {'items': items}}
+    cart.update_one(query, newvalues)
+    return json.dumps({'message': 'Cart updated successfully !'})
+
 # Read - List all Users
-@app.route("/users")
-def main():
-    response = []
-    for record in users.find():
-        record['_id'] = str(record['_id'])
-        record['password'] = record['password'].decode()
-        response.append(record)
-    print(response)
-    return json.dumps(response)
+# @app.route("/users")
+# def main():
+#     response = []
+#     for record in users.find():
+#         record['_id'] = str(record['_id'])
+#         record['password'] = record['password'].decode()
+#         response.append(record)
+#     print(response)
+#     return json.dumps(response)
 
 # Read - list an individual User
 
