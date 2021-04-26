@@ -20,3 +20,7 @@ Error:
 from signup not able to render sign in, instead the page content is showing in console. (Solved)
 
 Added Registration UI page
+
+Cart Page Feature added. User can go to the cart page and see the items in their cart. They can delete or increase quantity of the items in the cart.
+Note that backend will only update when the Update Cart button is clicked. Otherwise even if the changes are present in UI it will not be reflected in the backend.
+
