@@ -19,8 +19,6 @@ $(document).ready(function () {
                                                     <img src="../static/mamamiaImages/` + currImage + `?=` + new Date().valueOf() + `" class="img-fluid" alt="` + currName + ` title="` + currName + `">
                                                     <div class="mask-icon">
                                                         <ul>
-                                                            <li><button id="btnView` + currId + `" class="btn view-menu-item-btn" type="button" data-toggle="tooltip" 
-                                                                data-target="#view" data-placement="right" title="View"><i class="far fa-eye"></i></button></li>
                                                             <li><button id="btnEdit` + currId + `" class="btn edit-menu-item-btn" type="button" data-toggle="tooltip" 
                                                                 data-target="#editPopup" data-placement="right" title="Edit"><i class="far fa-edit"></i></button></li>
                                                             <li><button id="btnDelete` + currId + `" class="btn delete-menu-item-btn" type="button" data-toggle="tooltip" 
@@ -44,8 +42,6 @@ $(document).ready(function () {
                                                         <img src="../static/mamamiaImages/` + currImage + `?=` + new Date().valueOf() + `" class="img-fluid" alt="` + currName + ` title="` + currName + `">
                                                             <div class="mask-icon">
                                                                 <ul>
-                                                                    <li><button id="btnView` + currId + `" class="btn view-menu-item-btn" type="button" data-toggle="tooltip" 
-                                                                        data-target="#view" data-placement="right" title="View"><i class="far fa-eye"></i></button></li>
                                                                     <li><button id="btnEdit` + currId + `" class="btn edit-menu-item-btn" type="button" data-toggle="tooltip" 
                                                                         data-target="#editPopup" data-placement="right" title="Edit"><i class="far fa-edit"></i></button></li>
                                                                     <li><button id="btnDelete` + currId + `" class="btn delete-menu-item-btn" type="button" data-toggle="tooltip" 
@@ -264,26 +260,6 @@ $(document).ready(function () {
                         }
                     }
                 });
-            });
-
-            $('#deleteMenuItemSaveChanges').click(function () {
-                var selId = $(this).attr('id');
-                selId = selId.substring(9)
-                var dict = { "_id": selId };
-                console.log(selId)
-                // $.ajax({
-                //     type: 'POST',
-                //     url: '/deleteTodo',
-                //     contentType: "application/json",
-                //     dataType: "json",
-                //     data : JSON.stringify(dict),
-                //     success: function (data) {
-                //         location.reload();
-                //     },
-                //     error: function (error) {
-                //         console.log(error)
-                //     }
-                // });
             });
         },
         error: function (error) {

@@ -136,7 +136,7 @@ def checkout():
     return render_template('signin.html')
 
 
-@app.route("/getCart")
+@app.route("/cart")
 def getCart():
     email = session.get('email')
     response = cart.find_one({'email': email})
@@ -147,7 +147,7 @@ def getCart():
     return json.dumps(response)
 
 
-@app.route("/updateCart", methods=['PUT'])
+@app.route("/cart", methods=['PUT'])
 def updateCart():
     print("###########################################################################")
     print(request.get_json())

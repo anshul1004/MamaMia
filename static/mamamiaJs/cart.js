@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $.ajax({
-        url: '/getCart',
+        url: '/cart',
         type: 'GET',
         datatype:'JSON',
         success: function(response) {
@@ -149,7 +149,7 @@ $(document).ready(function(){
                     console.log("Update Cart called");
                     console.log(cart);
                     $.ajax({
-                            url:'/updateCart',
+                            url:'/cart',
                             data: JSON.stringify(cart),
                             type: 'PUT',
                             datatype:'JSON',
