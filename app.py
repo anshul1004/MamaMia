@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = 'static/mamamiaImages/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+PAGINATION_RESULTS_SIZE = 9
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -251,12 +252,36 @@ def deleteUser(id):
 # Read - List all Menu items
 @app.route("/menu")
 def getMenu():
-    response = []
+    items = []
     query = { "isAvailable": True }
-    for record in menu.find(query):
+    page_num = int(request.args.get("page"))
+    skips = PAGINATION_RESULTS_SIZE * (page_num - 1)
+
+    for record in menu.find(query).skip(skips).limit(PAGINATION_RESULTS_SIZE):
         record['_id'] = str(record['_id'])
-        response.append(record)
+        items.append(record)
+
+    # for record in menu.find(query):
+    #     record['_id'] = str(record['_id'])
+    #     response.append(record)
+    
+    # data = skipLimit(PAGINATION_RESULTS_SIZE, 1, query)
+    # print(data)
+    # print("--------------------------------------------------")
+    # print(request.args.get("page"))
+
+    total_items = menu.find(query).count()
+    response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
+
     return json.dumps(response)
+
+
+def skipLimit(page_size, page_num, query):
+    skips = page_size * (page_num - 1)
+
+    cursor = menu.find(query).skip(skips).limit(page_size)
+
+    return [x for x in cursor]
 
 
 # Read - Show individual menu item
@@ -325,16 +350,24 @@ def updateMenuItem(id):
     return json.dumps({'message': 'Menu item updated successfully !'})
 
 
-# Delete - delete a menu item
-@app.route('/menu/<id>', methods=['DELETE'])
-def deleteMenuItem(id):
-    query = {'_id': ObjectId(id)}
-    menu.delete_one(query)
-    return json.dumps({'message': 'Menu item deleted successfully !'})
-
-
 def allowedFile(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def idLimit(page_size, last_id=None):
+    if last_id is None:
+        cursor = menu.find().limit(page_size)
+    else:
+        cursor = menu.find({'_id': {'$gt': last_id}}).limit(page_size)
+     
+    data = [x for x in cursor]
+
+    if not data:
+        return None, None
+
+    last_id = data[-1]['_id']
+
+    return data, last_id
 
 
 # Read - List all orders for a user

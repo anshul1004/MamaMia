@@ -41,3 +41,19 @@
     color: white;
     background: grey;
 }
+
+.pagination-links {
+    display: flex;
+    justify-content: center;
+}
+
+.curr-page-number {
+    color: white;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.curr-page-number-active {
+    color: white;
+    background: black;
+}
