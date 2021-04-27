@@ -261,27 +261,10 @@ def getMenu():
         record['_id'] = str(record['_id'])
         items.append(record)
 
-    # for record in menu.find(query):
-    #     record['_id'] = str(record['_id'])
-    #     response.append(record)
-    
-    # data = skipLimit(PAGINATION_RESULTS_SIZE, 1, query)
-    # print(data)
-    # print("--------------------------------------------------")
-    # print(request.args.get("page"))
-
     total_items = menu.find(query).count()
     response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
 
     return json.dumps(response)
-
-
-def skipLimit(page_size, page_num, query):
-    skips = page_size * (page_num - 1)
-
-    cursor = menu.find(query).skip(skips).limit(page_size)
-
-    return [x for x in cursor]
 
 
 # Read - Show individual menu item
@@ -352,22 +335,6 @@ def updateMenuItem(id):
 
 def allowedFile(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def idLimit(page_size, last_id=None):
-    if last_id is None:
-        cursor = menu.find().limit(page_size)
-    else:
-        cursor = menu.find({'_id': {'$gt': last_id}}).limit(page_size)
-     
-    data = [x for x in cursor]
-
-    if not data:
-        return None, None
-
-    last_id = data[-1]['_id']
-
-    return data, last_id
 
 
 # Read - List all orders for a user
