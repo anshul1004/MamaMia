@@ -24,6 +24,7 @@ Note that backend will only update when the Update Cart button is clicked. Other
 Issues:
 
 In the list view of menu, ven we are near that menu item the drop screen anmation over image appears. Should remove this screen as its not used anywhere. 
+pagination for search have to see. Search results are few but it still shows all 7 pages, with fixed item. 
 
 
 
