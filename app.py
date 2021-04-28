@@ -26,9 +26,9 @@ cart = mydb["cart"]
 
 @app.route("/")
 def index():
-    if 'email' in session:
-        return render_template('userdashboard.html')
-    return render_template('index.html')
+    # if 'email' in session:
+    return render_template('userdashboard.html')
+    # return render_template('index.html')
 
 @app.route("/aboutUs")
 def showAboutUs():
@@ -367,6 +367,28 @@ def deleteOrderItem(id):
     orders.delete_one(query)
     return json.dumps({'message': 'Order item deleted successfully !'})
 
+@app.route("/searchInMenu", methods=['POST'])
+def searchInMenu():
+    # print('!!!!!!!!!!!!!!!!!!!!!', request.form)
+    search = request.form['search']
+    # print('#################', search)
+    results = menu.find({"$text": {"$search": search } } )
+    # print('!!!!!!!!!!!!!!!!!!!!!!!!!!',results)
+    response = []
+    for record in results:
+        record['_id'] = str(record['_id'])
+        response.append(record)
+    # print(response)
+    return json.dumps(response)
+
+@app.route("/filter", methods=['POST'])
+def filterInMenu():
+    data = request.get_json()
+    response = []
+    for record in menu.find({'category': data['category']}):
+        record['_id'] = str(record['_id'])
+        response.append(record)
+    return json.dumps(response)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
