@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = 'static/mamamiaImages/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+PAGINATION_RESULTS_SIZE = 9
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -251,11 +252,18 @@ def deleteUser(id):
 # Read - List all Menu items
 @app.route("/menu")
 def getMenu():
-    response = []
+    items = []
     query = { "isAvailable": True }
-    for record in menu.find(query):
+    page_num = int(request.args.get("page"))
+    skips = PAGINATION_RESULTS_SIZE * (page_num - 1)
+
+    for record in menu.find(query).skip(skips).limit(PAGINATION_RESULTS_SIZE):
         record['_id'] = str(record['_id'])
-        response.append(record)
+        items.append(record)
+
+    total_items = menu.find(query).count()
+    response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
+
     return json.dumps(response)
 
 
@@ -323,14 +331,6 @@ def updateMenuItem(id):
     updated_menu_item = {"$set": menu_item}
     menu.update_one(query, updated_menu_item)
     return json.dumps({'message': 'Menu item updated successfully !'})
-
-
-# Delete - delete a menu item
-@app.route('/menu/<id>', methods=['DELETE'])
-def deleteMenuItem(id):
-    query = {'_id': ObjectId(id)}
-    menu.delete_one(query)
-    return json.dumps({'message': 'Menu item deleted successfully !'})
 
 
 def allowedFile(filename):
