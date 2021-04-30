@@ -28,8 +28,8 @@ cart = mydb["cart"]
 @app.route("/")
 def index():
     # if 'email' in session:
-    return render_template('userdashboard.html')
-    # return render_template('index.html')
+    # return render_template('userdashboard.html')
+    return render_template('index.html')
 
 @app.route("/aboutUs")
 def showAboutUs():
@@ -137,6 +137,78 @@ def checkout():
     return render_template('signin.html')
 
 
+@app.route("/addtocart", methods=['POST'])
+def addToCart():
+    if request.method == 'POST':
+        print("######################################################################")
+        email = session.get('email')
+
+        quantity = 0
+        total = 1
+
+        data = request.get_json()
+        id = data['id']
+        usercart = cart.find_one({'email': email})
+
+        if usercart:
+            for i,item in enumerate(usercart['items']):
+                total += int(item['quantity'])
+        
+        cart_item = menu.find_one({'_id': ObjectId(id)})
+        cart_item['quantity']="1"
+        cart_item['id']=str(cart_item['_id'])
+
+        new_cart_total = 1.15*float(cart_item['price'])
+        new_cart_subtotal = float(cart_item['price'])
+        new_cart_tax = 0.15*float(cart_item['price'])
+
+        del cart_item['_id']
+        if usercart is None:
+            cart.insert_one({
+                'email':email,
+                'items':[cart_item],
+                'total': str(round(new_cart_total,2)),
+                'subtotal': str(new_cart_subtotal),
+                'tax': str(round(new_cart_tax,2))
+            })
+        else:
+            cart_items = usercart['items']
+            flag=False
+            for i in range(len(cart_items)):
+                if cart_items[i]['id'] == cart_item['id']:
+                    flag=True
+                    quantity = int(cart_item['quantity']) + 1
+                    cart_items[i]['quantity'] = str(quantity)
+            # usercart['subtotal'] += new_cart_subtotal
+            # usercart['tax'] += new_cart_tax
+            # usercart['total'] += new_cart_total
+            # for i in cart_items:
+            #     if i['id'] == cart_item['id']:
+            #         flag=True
+            #         quantity = int(cart_item['quantity']) + 1
+            #         cart_item['quantity'] = str(quantity)
+            if(flag==False):
+                cart_items.append(cart_item)
+            
+            usercart['subtotal'] = float(usercart['subtotal'])+new_cart_subtotal
+            usercart['tax'] = float(usercart['tax'])+new_cart_tax
+            usercart['total'] = float(usercart['total'])+new_cart_total
+
+            usercart['subtotal'] = str(round(usercart['subtotal'],2))
+            usercart['tax'] = str(round(usercart['tax'],2))
+            usercart['total'] = str(round(usercart['total'],2))
+            newvalues = {"$set": {
+                'items': cart_items,
+                'subtotal':usercart['subtotal'],
+                'tax':usercart['tax'],
+                'total':usercart['total']
+                }
+            }
+            cart.update_one({'email': email},newvalues)
+
+        return json.dumps({'message': 'Cart updated successfully !','cart_quantity': total})
+
+
 @app.route("/cart")
 def getCart():
     email = session.get('email')
@@ -150,13 +222,22 @@ def getCart():
 
 @app.route("/cart", methods=['PUT'])
 def updateCart():
-    print("###########################################################################")
     print(request.get_json())
     data = request.get_json()
     email = data['email']
     query = {'email': email}
     items = data['items']
-    newvalues = {"$set": {'items': items}}
+    subtotal = str(data['subtotal'])
+    total = str(data['total'])
+    tax = str(data['tax'])
+    newvalues = {"$set": 
+        {
+        'items': items,
+        'tax':tax,
+        'total':total,
+        'subtotal':subtotal
+        }
+    }
     cart.update_one(query, newvalues)
     return json.dumps({'message': 'Cart updated successfully !'})
 

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     $.ajax({
         url: '/cart',
         type: 'GET',
@@ -6,6 +7,7 @@ $(document).ready(function(){
         success: function(response) {
             var i;
             var cart = JSON.parse(response);
+            console.log(cart)
             var total = 0
             var items = cart.items;
             var cartId = cart._id;
@@ -13,17 +15,15 @@ $(document).ready(function(){
             for(i=0;i<items.length;i++){
                 console.log(items[i]);
                 var item_id = items[i].id;
-                var image = items[i].image;
+                // var image = items[i].image;
                 var item_name = items[i].name;
                 var price = items[i].price;
                 var quantity = items[i].quantity;
                 total = (parseFloat(price).toFixed(2)*parseInt(quantity)).toString();
                 console.log(total);
                 var data = ' <tr class="cartItem" id=row-'+ i +'>' +
-                    '<td class="thumbnail-img">' +
-                        '<a href="#">' +
-                            '<img class="img-fluid" src="../'+image+'" alt="" />'+
-                        '</a>'+
+                    '<td >' +
+                        '<p>'+(i+1)+'</p>' +
                     '</td>'+
                     '<td class="name-pr">'+
                         '<p>'+
@@ -54,7 +54,7 @@ $(document).ready(function(){
             });
 
             var tax = (subtotal*0.15).toFixed(2);
-            var total = (parseFloat(subtotal)+parseFloat(tax));
+            var total = (parseFloat(subtotal)+parseFloat(tax)).toFixed(2);
 
             
             var cart_summary = '<h3>Order summary</h3>'+
@@ -73,6 +73,9 @@ $(document).ready(function(){
             '</div>'+
             '<hr>';
             $('.order-box').append(cart_summary);
+            cart['total'] = total;
+            cart['tax'] = tax;
+            cart['subtotal'] = subtotal;
 
             $(function () {
                 $('.deleteButton').on('click', function () {
@@ -83,18 +86,6 @@ $(document).ready(function(){
                     itemRow.remove();
                     cart.items.splice(id[1],1);
                     recalculateCart();
-                    // $.ajax({
-                    //                 url:'/deleteItem',
-                    //                 data: {"id":id[1]},
-                    //                 type: 'POST',
-                    //                 success: function(response) {
-                    //                     console.log("Delete successful");
-                    //                     window.location.reload();
-                    //                 },
-                    //                 error: function(error) {
-                    //                     console.log(error);
-                    //                 }
-                    // });
                 });
             });
             
@@ -142,6 +133,9 @@ $(document).ready(function(){
                 '<hr>';
                 $('.order-box').children().remove();
                 $('.order-box').append(cart_summary);
+                cart['total'] = total;
+                cart['tax'] = tax;
+                cart['subtotal'] = subtotal;
             }
 
             $(function () {
@@ -157,6 +151,26 @@ $(document).ready(function(){
                             success: function(response) {
                                 console.log("Update Successful!!");
                                 window.location.reload();
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                    });
+                });
+            });
+
+            $(function () {
+                $('#checkoutButton').on('click', function () {
+                    console.log("Checkout");
+                    $.ajax({
+                            url:'/cart',
+                            data: JSON.stringify(cart),
+                            type: 'PUT',
+                            datatype:'JSON',
+                            contentType: 'application/json',
+                            success: function(response) {
+                                console.log("Checking out and updating the cart!!");
+                                window.location.href="/checkout";
                             },
                             error: function(error) {
                                 console.log(error);

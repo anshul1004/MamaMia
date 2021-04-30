@@ -32,6 +32,46 @@ $(document).ready(function () {
                     },
                     success: function (data) {
                         populateMenuItems(data)
+
+                        $(".cart").click(function(){
+                            console.log($(this).attr('id'))
+                            var itemId = $(this).attr('id').split('-')[1];
+                            $.ajax({
+                                url: '/addtocart',
+                                type: 'POST',
+                                contentType:"application/json",
+                                dataType: "json",
+                                data: JSON.stringify({
+                                    id: itemId
+                                }),
+                                success: function (response) {
+                                    console.log(response)
+                                },
+                                error: function (error) {
+                                    console.log(error)
+                                }
+                            });
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            });
+
+            $(".cart").click(function(){
+                console.log($(this).attr('id'))
+                var itemId = $(this).attr('id').split('-')[1];
+                $.ajax({
+                    url: '/addtocart',
+                    type: 'POST',
+                    contentType:"application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: itemId
+                    }),
+                    success: function (response) {
+                        console.log(response)
                     },
                     error: function (error) {
                         console.log(error)
@@ -58,13 +98,14 @@ $(document).ready(function () {
                     var currImage = item['image']
                     var currName = item['name']
                     var currPrice = item['price']
-                    
+                    var currId = item['_id']
+
                     var currHtmlGridView = `<div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="products-single fix">
                                                     <div class="box-img-hover">
                                                         <img src="../static/mamamiaImages/` + currImage + `" class="img-fluid" alt="` + currName + ` title="` + currName + `">
                                                         <div class="mask-icon">
-                                                            <a class="cart" href="#">Add to Cart</a>
+                                                            <button class="cart" type="button" id="btnAddToCart-`+ currId +`">Add to Cart</button>
                                                         </div>
                                                     </div>
                                                     <div class="why-text">
@@ -91,7 +132,7 @@ $(document).ready(function () {
                                                             <h4>` + currName + `</h4>
                                                             <h5> $ ` + currPrice + `</h5>
                                                             <p>` + currDescription + `</p>
-                                                            <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                                            <button class="btn hvr-hover cart" type="button" id=btnAddToCart-`+ currId +`>Add to Cart</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -106,6 +147,7 @@ $(document).ready(function () {
         });
     });
 });
+
 
 function populateMenuItems(data) {
 
@@ -125,7 +167,7 @@ function populateMenuItems(data) {
                                         <div class="box-img-hover">
                                             <img src="../static/mamamiaImages/` + currImage + `?=` + new Date().valueOf() + `" class="img-fluid" alt="` + currName + ` title="` + currName + `">
                                             <div class="mask-icon">
-                                                <a class="cart" href="#">Add to Cart</a>
+                                                <button class="cart" type="button" id="btnAddToCart-`+ currId +`">Add to Cart</button>
                                             </div>
                                         </div>
                                      <div class="why-text">
@@ -148,7 +190,7 @@ function populateMenuItems(data) {
                                                 <h4>` + currName + `</h4>
                                                 <h5> $ ` + currPrice + `</h5>
                                                 <p>` + currDescription + `</p>
-                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                                <button class="btn hvr-hover cart" type="button" id=btnAddToCart-`+ currId +`>Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
