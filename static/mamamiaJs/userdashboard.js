@@ -1,88 +1,88 @@
 $(document).ready(function () {
-    $.ajax({
-        type: 'GET',
-        url: '/menu',
-        contentType: "application/json",
-        dataType: "json",
-        data: {
-            page: 1
-        },
-        success: function (data) {
-            var totalPages = data['totalItems'] / data['pageSize']
-            if (data['totalItems'] % data['pageSize'] != 0) {
-                totalPages += 1
-            }
-            for (var i = 1; i <= totalPages; i++) {
-                var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number" type="submit">` + i + `</button>`
-                $(".pagination-links").append(currPageHtml);
-            }
+    // $.ajax({
+    //     type: 'GET',
+    //     url: '/menu',
+    //     contentType: "application/json",
+    //     dataType: "json",
+    //     data: {
+    //         page: 1
+    //     },
+    //     success: function (data) {
+    //         var totalPages = data['totalItems'] / data['pageSize']
+    //         if (data['totalItems'] % data['pageSize'] != 0) {
+    //             totalPages += 1
+    //         }
+    //         for (var i = 1; i <= totalPages; i++) {
+    //             var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number" type="submit">` + i + `</button>`
+    //             $(".pagination-links").append(currPageHtml);
+    //         }
 
-            populateMenuItems(data)
+    //         populateMenuItems(data)
 
-            $('.curr-page-number').click(function () {
-                var selId = $(this).attr('id')
-                selId = parseInt(selId.substring(7))
-                $.ajax({
-                    type: 'GET',
-                    url: '/menu',
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: {
-                        page: selId
-                    },
-                    success: function (data) {
-                        populateMenuItems(data)
+    //         $('.curr-page-number').click(function () {
+    //             var selId = $(this).attr('id')
+    //             selId = parseInt(selId.substring(7))
+    //             $.ajax({
+    //                 type: 'GET',
+    //                 url: '/menu',
+    //                 contentType: "application/json",
+    //                 dataType: "json",
+    //                 data: {
+    //                     page: selId
+    //                 },
+    //                 success: function (data) {
+    //                     populateMenuItems(data)
 
-                        $(".cart").click(function(){
-                            console.log($(this).attr('id'))
-                            var itemId = $(this).attr('id').split('-')[1];
-                            $.ajax({
-                                url: '/addtocart',
-                                type: 'POST',
-                                contentType:"application/json",
-                                dataType: "json",
-                                data: JSON.stringify({
-                                    id: itemId
-                                }),
-                                success: function (response) {
-                                    console.log(response)
-                                },
-                                error: function (error) {
-                                    console.log(error)
-                                }
-                            });
-                        });
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                });
-            });
+    //                     $(".cart").click(function(){
+    //                         console.log($(this).attr('id'))
+    //                         var itemId = $(this).attr('id').split('-')[1];
+    //                         $.ajax({
+    //                             url: '/addtocart',
+    //                             type: 'POST',
+    //                             contentType:"application/json",
+    //                             dataType: "json",
+    //                             data: JSON.stringify({
+    //                                 id: itemId
+    //                             }),
+    //                             success: function (response) {
+    //                                 console.log(response)
+    //                             },
+    //                             error: function (error) {
+    //                                 console.log(error)
+    //                             }
+    //                         });
+    //                     });
+    //                 },
+    //                 error: function (error) {
+    //                     console.log(error)
+    //                 }
+    //             });
+    //         });
 
-            $(".cart").click(function(){
-                console.log($(this).attr('id'))
-                var itemId = $(this).attr('id').split('-')[1];
-                $.ajax({
-                    url: '/addtocart',
-                    type: 'POST',
-                    contentType:"application/json",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        id: itemId
-                    }),
-                    success: function (response) {
-                        console.log(response)
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                });
-            });
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    });
+    //         $(".cart").click(function(){
+    //             console.log($(this).attr('id'))
+    //             var itemId = $(this).attr('id').split('-')[1];
+    //             $.ajax({
+    //                 url: '/addtocart',
+    //                 type: 'POST',
+    //                 contentType:"application/json",
+    //                 dataType: "json",
+    //                 data: JSON.stringify({
+    //                     id: itemId
+    //                 }),
+    //                 success: function (response) {
+    //                     console.log(response)
+    //                 },
+    //                 error: function (error) {
+    //                     console.log(error)
+    //                 }
+    //             });
+    //         });
+    //     },
+    //     error: function (error) {
+    //         console.log(error)
+    //     }
+    // });
 
     $('#btnSearch').click(function() {
         $.ajax({

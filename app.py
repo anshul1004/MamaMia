@@ -29,7 +29,7 @@ cart = mydb["cart"]
 def index():
     # if 'email' in session:
     # return render_template('userdashboard.html')
-    return render_template('index.html')
+    return render_template('userdashboard.html')
 
 @app.route("/aboutUs")
 def showAboutUs():
@@ -459,11 +459,11 @@ def searchInMenu():
     # print(response)
     return json.dumps(response)
 
-@app.route("/filter", methods=['POST'])
+@app.route("/filter", methods=['GET'])
 def filterInMenu():
-    data = request.get_json()
+    category = request.args.get('myselect')
     response = []
-    for record in menu.find({'category': data['category']}):
+    for record in menu.find({'category': category}):
         record['_id'] = str(record['_id'])
         response.append(record)
     return json.dumps(response)
