@@ -369,11 +369,8 @@ def deleteOrderItem(id):
 
 @app.route("/searchInMenu", methods=['POST'])
 def searchInMenu():
-    # print('!!!!!!!!!!!!!!!!!!!!!', request.form)
     search = request.form['search']
-    # print('#################', search)
     results = menu.find({"$text": {"$search": search } } )
-    # print('!!!!!!!!!!!!!!!!!!!!!!!!!!',results)
     response = []
     for record in results:
         record['_id'] = str(record['_id'])
