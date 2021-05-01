@@ -5,6 +5,7 @@ import pymongo
 import bcrypt
 import re
 from werkzeug.utils import secure_filename
+from datetime import date
 
 UPLOAD_FOLDER = 'static/mamamiaImages/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -54,7 +55,7 @@ def showSignUp():
 @app.route("/showSignIn")
 def showSignIn():
     if 'email' in session:
-        render_template('userdashboard.html')
+        return render_template('userdashboard.html')
     return render_template('signin.html')
 
 
@@ -88,6 +89,17 @@ def signUp():
                     'email': email,
                     'password': hashPass,
                     'isAdmin': False
+                })
+                cart.insert_one({
+                    'email': email,
+                    'items':[],
+                    'subtotal': "0",
+                    'tax':"0",
+                    'total':"0"
+                })
+                orders.insert_one({
+                    'email':email,
+                    'orders':[]
                 })
                 session['email'] = email
                 return json.dumps({"message": "User Created Suucesfully"})
@@ -163,7 +175,7 @@ def addToCart():
         new_cart_tax = 0.15*float(cart_item['price'])
 
         del cart_item['_id']
-        if usercart is None:
+        if usercart['items'] == 0 :
             cart.insert_one({
                 'email':email,
                 'items':[cart_item],
@@ -214,9 +226,6 @@ def getCart():
     email = session.get('email')
     response = cart.find_one({'email': email})
     response['_id'] = str(response['_id'])
-    # for record in cart.find({'email': email}):
-    #     record['_id'] = str(record['_id'])
-    #     response.append(record)
     return json.dumps(response)
 
 
@@ -242,6 +251,71 @@ def updateCart():
     return json.dumps({'message': 'Cart updated successfully !'})
 
 
+@app.route("/placeOrder", methods=['POST'])
+def placeOrder():
+    print(request.get_json())
+    data = request.get_json(force=True)
+
+    usercart = data['cart']
+    print(cart)
+    email = data['cart']['email']
+    address = data['shipping_address']
+
+    query = {'email': email}
+
+    all_orders = orders.find_one(query)['orders']
+    today = date.today().strftime("%m/%d/%y")
+    new_order = {
+        'cart': usercart,
+        'address': address,
+        'date': today
+    }
+
+    all_orders.append(new_order)
+
+    query = {'email': email}
+    newvalues = {"$set": 
+        {
+        'orders': all_orders
+        }
+    }
+    orders.update_one(query, newvalues)
+
+    cart_newvalues = {"$set": 
+        {
+        'items': [],
+        'tax':"0.00",
+        'total':"0.00",
+        'subtotal':"0.00"
+        }
+    }
+    cart.update_one(query, cart_newvalues)
+
+    return json.dumps({"message": "Order Placed Successfully"})
+
+
+
+@app.route("/showMyAccount")
+def showMyAccount():
+    if 'email' in session:
+        return render_template('my-account.html')
+    return render_template('signin.html')
+
+@app.route("/getOrders")
+def getOrdersListing():
+    email = session['email']
+    user_orders = orders.find_one({'email':email})
+    all_orders = user_orders
+    all_orders['_id'] = str(all_orders['_id'])
+    return json.dumps(all_orders)
+
+@app.route("/getOrderDetails")
+def getOrderDetails():
+    id = request.get_json()
+    email = session['email']
+    user_orders = orders.find_one({'email':email})
+    all_orders = user_orders['orders']
+    return json.dumps(all_orders[id])
 # Read - List all Users
 # @app.route("/users")
 # def main():
@@ -423,7 +497,7 @@ def allowedFile(filename):
 
 @app.route("/orders")
 def getOrders():
-    userId = session.get('userId')
+    userId = session.get('email')
     response = []
     for record in orders.find({'userId': userId}):
         record['_id'] = str(record['_id'])

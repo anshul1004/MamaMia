@@ -12,41 +12,42 @@ $(document).ready(function(){
             var items = cart.items;
             var cartId = cart._id;
             var email = cart.email;
-            for(i=0;i<items.length;i++){
-                console.log(items[i]);
-                var item_id = items[i].id;
-                // var image = items[i].image;
-                var item_name = items[i].name;
-                var price = items[i].price;
-                var quantity = items[i].quantity;
-                total = (parseFloat(price).toFixed(2)*parseInt(quantity)).toString();
-                console.log(total);
-                var data = ' <tr class="cartItem" id=row-'+ i +'>' +
-                    '<td >' +
-                        '<p>'+(i+1)+'</p>' +
-                    '</td>'+
-                    '<td class="name-pr">'+
-                        '<p>'+
-                            item_name
-                        + '</p>'+
-                    '</td>'+
-                    '<td class="price-pr">'+
-                        '<p>'+ price+'</p>'+
-                    '</td>'+
-                    '<td class="quantity-box"><input type="number" size="4" value="'+quantity+'" min="0" step="1"'+
-                            'class="c-input-text qty text"></td>'+
-                    '<td class="total-pr">'+
-                        '<p>'+total+'</p>'+
-                    '</td>'+
-                    '<td class="remove-pr">'+
-                        '<button class="deleteButton" type="button" id=deletebutton-'+i+'>'+
-                            '<i class="fas fa-times"></i>'+
-                        '</button>'+
-                    '</td>'+
-                '</tr>';
-                $("#cart-table-body").append(data);
+            if (items != undefined) {
+                for(i=0;i<items.length;i++){
+                    console.log(items[i]);
+                    var item_id = items[i].id;
+                    // var image = items[i].image;
+                    var item_name = items[i].name;
+                    var price = items[i].price;
+                    var quantity = items[i].quantity;
+                    total = (parseFloat(price).toFixed(2)*parseInt(quantity)).toString();
+                    console.log(total);
+                    var data = ' <tr class="cartItem" id=row-'+ i +'>' +
+                        '<td >' +
+                            '<p>'+(i+1)+'</p>' +
+                        '</td>'+
+                        '<td class="name-pr">'+
+                            '<p>'+
+                                item_name
+                            + '</p>'+
+                        '</td>'+
+                        '<td class="price-pr">'+
+                            '<p>'+ price+'</p>'+
+                        '</td>'+
+                        '<td class="quantity-box"><input type="number" size="4" value="'+quantity+'" min="0" step="1"'+
+                                'class="c-input-text qty text"></td>'+
+                        '<td class="total-pr">'+
+                            '<p>'+total+'</p>'+
+                        '</td>'+
+                        '<td class="remove-pr">'+
+                            '<button class="deleteButton" type="button" id=deletebutton-'+i+'>'+
+                                '<i class="fas fa-times"></i>'+
+                            '</button>'+
+                        '</td>'+
+                    '</tr>';
+                    $("#cart-table-body").append(data);
+                }
             }
-
             var subtotal = 0;
                 
             $('.cartItem').each(function(){
@@ -159,25 +160,31 @@ $(document).ready(function(){
                 });
             });
 
-            $(function () {
-                $('#checkoutButton').on('click', function () {
-                    console.log("Checkout");
-                    $.ajax({
-                            url:'/cart',
-                            data: JSON.stringify(cart),
-                            type: 'PUT',
-                            datatype:'JSON',
-                            contentType: 'application/json',
-                            success: function(response) {
-                                console.log("Checking out and updating the cart!!");
-                                window.location.href="/checkout";
-                            },
-                            error: function(error) {
-                                console.log(error);
-                            }
+            
+
+                $(function () {
+                    $('#checkoutButton').on('click', function () {
+                        console.log("Checkout");
+                        if(items != undefined){
+                            $.ajax({
+                                    url:'/cart',
+                                    data: JSON.stringify(cart),
+                                    type: 'PUT',
+                                    datatype:'JSON',
+                                    contentType: 'application/json',
+                                    success: function(response) {
+                                        console.log("Checking out and updating the cart!!");
+                                        window.location.href="/checkout";
+                                    },
+                                    error: function(error) {
+                                        console.log(error);
+                                    }
+                            });
+                        }else{
+                            alert("Nothing to checkout!! Cart is Empty");
+                        }
                     });
                 });
-            });
 
         },
         error: function(error) {
