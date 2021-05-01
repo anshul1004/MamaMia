@@ -526,19 +526,24 @@ def deleteOrderItem(id):
 def searchInMenu():
     search= request.args.get('search')
     results = menu.find({"$text": {"$search": search } } )
-    response = []
+    total_items = results.count()
+    items = []
     for record in results:
         record['_id'] = str(record['_id'])
-        response.append(record)
+        items.append(record)
+    response = {"totalItems": total_items, "pageNumber": 1, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
     return json.dumps(response)
 
 @app.route("/filter", methods=['GET'])
 def filterInMenu():
     category = request.args.get('category')
-    response = []
-    for record in menu.find({'category': category}):
+    results = menu.find({'category': category})
+    total_items = results.count()
+    items = []
+    for record in results:
         record['_id'] = str(record['_id'])
-        response.append(record)
+        items.append(record)
+    response = {"totalItems": total_items, "pageNumber": 1, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
     return json.dumps(response)
 
 if __name__ == "__main__":

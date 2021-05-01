@@ -105,6 +105,36 @@
     <div class="shop-box-inner">
         <div class="container">
             <div class="row">
+                <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
+                    <div class="product-categori">
+                        <div class="search-product">
+                            <form id='searchForm' onsubmit="return false;">
+                                <input class="form-control" placeholder="Search here..." type="text" id="search" name="search">
+                                <button type="button" id="btnSearch"> <i class="fa fa-search"></i> </button>
+                            </form>
+                        </div>
+                        <div class="filter-sidebar-left">
+                            <div class="title-left">
+                                <h3>Categories Filter</h3>
+                            </div>
+                            <select class="custom-select mr-sm-6" id="categorySelect">
+                                <option value="All">Show All Categories</option>
+                                <option value="Appetizer">Appetizer</option>
+                                <option value="Salad">Salad</option>
+                                <option value="Sandwich">Sandwich</option>
+                                <option value="Pasta">Pasta</option>
+                                <option value="Chicken">Chicken</option>
+                                <option value="Seafood">Seafood</option>
+                                <option value="Steak">Steak</option>
+                                <option value="Pizza">Pizza</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Wine">Wine</option>
+                                <option value="Beverage">Beverage</option>
+                            ""</select>
+                        </div>
+                        
+                    </div>
+                </div>
                 <div class="col-xl-9 col-lg-9 col-sm-12 col-xs-12 shop-content-right">
                     <div class="right-product-box">
                         <div class="product-item-filter row">
@@ -220,7 +250,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
+                <!-- <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
                     <div class="product-categori">
                         <div class="search-product">
                             <form id='searchForm'>
@@ -233,6 +263,7 @@
                                 <h3>Categories Filter</h3>
                             </div>
                             <select class="custom-select mr-sm-6" id="categorySelect">
+                                <option value="All">Show All Categories</option>
                                 <option value="Appetizer">Appetizer</option>
                                 <option value="Salad">Salad</option>
                                 <option value="Sandwich">Sandwich</option>
@@ -248,7 +279,7 @@
                         </div>
                         
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
