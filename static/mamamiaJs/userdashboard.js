@@ -138,6 +138,26 @@ $(document).ready(function () {
                                                 </div>
                                             </div>`
                     $("#menu-items-list-view").append(currHtmlListView);
+
+                    $(".cart").click(function(){
+                        console.log($(this).attr('id'))
+                        var itemId = $(this).attr('id').split('-')[1];
+                        $.ajax({
+                            url: '/addtocart',
+                            type: 'POST',
+                            contentType:"application/json",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                id: itemId
+                            }),
+                            success: function (response) {
+                                console.log(response)
+                            },
+                            error: function (error) {
+                                console.log(error)
+                            }
+                        });
+                    });
                 });
             },
             error: function (error) {
@@ -200,6 +220,26 @@ $(document).ready(function () {
                                                 </div>
                                             </div>`
                     $("#menu-items-list-view").append(currHtmlListView);
+
+                    $(".cart").click(function(){
+                        console.log($(this).attr('id'))
+                        var itemId = $(this).attr('id').split('-')[1];
+                        $.ajax({
+                            url: '/addtocart',
+                            type: 'POST',
+                            contentType:"application/json",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                id: itemId
+                            }),
+                            success: function (response) {
+                                console.log(response)
+                            },
+                            error: function (error) {
+                                console.log(error)
+                            }
+                        });
+                    });
                 });
             },
             error: function (error) {

@@ -28,9 +28,9 @@ cart = mydb["cart"]
 
 @app.route("/")
 def index():
-    # if 'email' in session:
-    return render_template('userdashboard.html')
-    # return render_template('index.html')
+    if 'email' in session:
+        return render_template('userdashboard.html')
+    return render_template('index.html')
 
 @app.route("/aboutUs")
 def showAboutUs():
