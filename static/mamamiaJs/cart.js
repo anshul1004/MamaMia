@@ -48,14 +48,14 @@ $(document).ready(function(){
                     $("#cart-table-body").append(data);
                 }
             }
-            var subtotal = 0;
+            var subtotal = 0.0;
                 
             $('.cartItem').each(function(){
                 subtotal += parseFloat($(this).children('.total-pr').text());
             });
-
+            subtotal = subtotal.toFixed(2);
             var tax = (subtotal*0.15).toFixed(2);
-            var total = (parseFloat(subtotal)+parseFloat(tax)).toFixed(2);
+            var grandTotal = (parseFloat(subtotal)+parseFloat(tax)).toFixed(2);
 
             
             var cart_summary = '<h3>Order summary</h3>'+
@@ -70,11 +70,11 @@ $(document).ready(function(){
             '<hr>'+
             '<div class="d-flex gr-total">'+
                 '<h5>Grand Total</h5>'+
-                '<div class="ml-auto h5"> $'+ total +'</div>'+
+                '<div class="ml-auto h5"> $'+ grandTotal +'</div>'+
             '</div>'+
             '<hr>';
             $('.order-box').append(cart_summary);
-            cart['total'] = total;
+            cart['total'] = grandTotal;
             cart['tax'] = tax;
             cart['subtotal'] = subtotal;
 
@@ -107,14 +107,15 @@ $(document).ready(function(){
             });
 
             function recalculateCart() {
-                subtotal = 0;
+                subtotal = 0.0;
                 
                 $('.cartItem').each(function(){
-                    subtotal += parseFloat($(this).children('.total-pr').text());
+                    subtotal += parseFloat($(this).children('.total-pr').text()).toFixed(2);
                 });
+                subtotal = subtotal.toFixed(2);
 
                 tax = (subtotal*0.15).toFixed(2);
-                total = (parseFloat(subtotal)+parseFloat(tax));
+                grandTotal = (parseFloat(subtotal)+parseFloat(tax));
 
                 
                 cart_summary = '<h3>Order summary</h3>'+
@@ -129,12 +130,12 @@ $(document).ready(function(){
                 '<hr>'+
                 '<div class="d-flex gr-total">'+
                     '<h5>Grand Total</h5>'+
-                    '<div class="ml-auto h5"> $'+ total +'</div>'+
+                    '<div class="ml-auto h5"> $'+ grandTotal +'</div>'+
                 '</div>'+
                 '<hr>';
                 $('.order-box').children().remove();
                 $('.order-box').append(cart_summary);
-                cart['total'] = total;
+                cart['total'] = grandTotal;
                 cart['tax'] = tax;
                 cart['subtotal'] = subtotal;
             }

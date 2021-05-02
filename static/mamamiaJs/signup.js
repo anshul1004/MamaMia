@@ -52,9 +52,9 @@ $(document).ready(function(){
                 success: function(response) {
                     console.log(response)
                         var message = JSON.parse(response);
-                        if(message.error == "User already exists")
-                            alert("User already esists");
-                        else if(message.error == "Invalid Credentials")
+                        if(message.message == "User already exists")
+                            alert("User already exists");
+                        else if(message.message == "Invalid Credentials")
                             {
                                 console.log("Invalid Credentials: Backend Check");
                                 alert("Email or Password wrong");

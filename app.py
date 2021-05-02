@@ -544,28 +544,27 @@ def deleteOrderItem(id):
     orders.delete_one(query)
     return json.dumps({'message': 'Order item deleted successfully !'})
 
-@app.route("/searchInMenu", methods=['GET'])
-def searchInMenu():
+@app.route("/searchAndFilter", methods=['GET'])
+def searchAndFilter():
     search= request.args.get('search')
-    results = menu.find({"$text": {"$search": search } } )
-    total_items = results.count()
-    items = []
-    for record in results:
-        record['_id'] = str(record['_id'])
-        items.append(record)
-    response = {"totalItems": total_items, "pageNumber": 1, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
-    return json.dumps(response)
-
-@app.route("/filter", methods=['GET'])
-def filterInMenu():
     category = request.args.get('category')
-    results = menu.find({'category': category})
+    page_num = int(request.args.get('page'))
+    skips = PAGINATION_RESULTS_SIZE * (page_num - 1)
+
+    if search == "" or search == None:
+        results = menu.find({'category': category, 'isAvailable': True})
+    elif category == "All":
+        results = menu.find({ "$or":[ {'name': {'$regex': search, '$options': 'i'}}, {'description': {'$regex': search, '$options': 'i'}}], 'isAvailable': True })
+    else:
+        results = menu.find({ "$or":[ {'name': {'$regex': search, '$options': 'i'}}, {'description': {'$regex': search, '$options': 'i'}}], 'category': category, 'isAvailable': True })
+
     total_items = results.count()
     items = []
-    for record in results:
+    for record in results.skip(skips).limit(PAGINATION_RESULTS_SIZE):
         record['_id'] = str(record['_id'])
         items.append(record)
-    response = {"totalItems": total_items, "pageNumber": 1, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
+
+    response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
     return json.dumps(response)
 
 if __name__ == "__main__":

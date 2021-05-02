@@ -8,7 +8,6 @@ $(document).ready(function () {
             page: 1
         },
         success: function (data) {
-            console.log(data)
             var totalPages = data['totalItems'] / data['pageSize']
             if (data['totalItems'] % data['pageSize'] != 0) {
                 totalPages += 1
@@ -34,25 +33,6 @@ $(document).ready(function () {
                     success: function (data) {
                         populateMenuItems(data)
 
-                        $(".cart").click(function () {
-                            console.log($(this).attr('id'))
-                            var itemId = $(this).attr('id').split('-')[1];
-                            $.ajax({
-                                url: '/addtocart',
-                                type: 'POST',
-                                contentType: "application/json",
-                                dataType: "json",
-                                data: JSON.stringify({
-                                    id: itemId
-                                }),
-                                success: function (response) {
-                                    console.log(response)
-                                },
-                                error: function (error) {
-                                    console.log(error)
-                                }
-                            });
-                        });
                     },
                     error: function (error) {
                         console.log(error)
@@ -60,96 +40,25 @@ $(document).ready(function () {
                 });
             });
 
-            $(".cart").click(function () {
-                console.log($(this).attr('id'))
-                var itemId = $(this).attr('id').split('-')[1];
-                $.ajax({
-                    url: '/addtocart',
-                    type: 'POST',
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        id: itemId
-                    }),
-                    success: function (response) {
-                        console.log(response)
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                });
+            addToCart();
+
+            $('#searchForm').submit(function () {
+                computeSearchAndFilter()
+            });
+
+            $('#categorySelect').change(function () {
+                computeSearchAndFilter()
+            });
+
+            $('.user-menu-btn').click(function () {
+                location.reload();
             });
         },
         error: function (error) {
             console.log(error)
         }
     });
-
-    $('#searchForm').submit(function () {
-        search_string = $('#searchForm').serialize().split("=")[1]
-        if (search_string == "") {
-            location.reload()
-        }
-        $.ajax({
-            url: '/searchInMenu',
-            data: $('#searchForm').serialize(),
-            contentType: "application/json",
-            dataType: "json",
-            type: 'GET',
-            success: function (data) {
-                console.log(data)
-                $(".pagination-links").html('');
-                var totalPages = data['totalItems'] / data['pageSize']
-                if (data['totalItems'] % data['pageSize'] != 0) {
-                    totalPages += 1
-                }
-                for (var i = 1; i <= totalPages; i++) {
-                    var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number" type="submit">` + i + `</button>`
-                    $(".pagination-links").append(currPageHtml);
-                }
-                populateMenuItems(data)
-            },
-            error: function (error) {
-                console.log(error)
-            }
-
-        });
-    });
-    $('#categorySelect').change(function () {
-        category = $(this).val()
-        if (category == "All") {
-            location.reload()
-        }
-        $.ajax({
-            url: '/filter',
-            data: { 'category': category },
-            type: 'GET',
-            contentType: "application/json",
-            dataType: "json",
-            success: function (data) {
-                console.log(data)
-                $(".pagination-links").html('');
-                var totalPages = data['totalItems'] / data['pageSize']
-                if (data['totalItems'] % data['pageSize'] != 0) {
-                    totalPages += 1
-                }
-                for (var i = 1; i <= totalPages; i++) {
-                    var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number" type="submit">` + i + `</button>`
-                    $(".pagination-links").append(currPageHtml);
-                }
-                populateMenuItems(data)
-            },
-            error: function (error) {
-                console.log(error)
-            }
-
-        });
-    });
-    $('.user-menu-btn').click(function () {
-        location.reload();
-    });
 });
-
 
 function populateMenuItems(data) {
 
@@ -204,5 +113,88 @@ function populateMenuItems(data) {
     var currPageId = 'btnPage' + pageNumber
     var currPage = document.getElementById(currPageId)
     $(".curr-page-number").removeClass("curr-page-number-active");
-    currPage.classList.add("curr-page-number-active");
+    $(".curr-page-number-sf").removeClass("curr-page-number-active");
+    if (currPage) {
+        currPage.classList.add("curr-page-number-active");
+    }
+}
+
+function pageLinksSearchFilter(data) {
+    $(".pagination-links").html('');
+    var totalPages = data['totalItems'] / data['pageSize']
+    if (data['totalItems'] % data['pageSize'] != 0) {
+        totalPages += 1
+    }
+    for (var i = 1; i <= totalPages; i++) {
+        var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number-sf" type="submit">` + i + `</button>`
+        $(".pagination-links").append(currPageHtml);
+    }
+}
+
+function computeSearchAndFilter() {
+    search_string = $('#searchForm').serialize().split("=")[1]
+    category = $('#categorySelect').val()
+    if (search_string == "" && category == "All") {
+        location.reload()
+    }
+    $.ajax({
+        url: '/searchAndFilter',
+        data: { 'search': search_string, 'category': category, 'page': 1 },
+        contentType: "application/json",
+        dataType: "json",
+        type: 'GET',
+        success: function (data) {
+            pageLinksSearchFilter(data)
+            populateMenuItems(data)
+            addToCart();
+            $('.curr-page-number-sf').click(function () {
+                var selId = $(this).attr('id')
+                selId = parseInt(selId.substring(7))
+                search_string = $('#searchForm').serialize().split("=")[1]
+                category = $('#categorySelect').val()
+                if (search_string == "" && category == "All") {
+                    location.reload()
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '/searchAndFilter',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: { 'search': search_string, 'category': category, 'page': selId },
+                    success: function (data) {
+                        populateMenuItems(data)
+                        addToCart();
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            });
+        },
+        error: function (error) {
+            console.log(error)
+        }
+
+    });
+}
+
+function addToCart() {
+    $(".cart").click(function () {
+        var itemId = $(this).attr('id').split('-')[1];
+        $.ajax({
+            url: '/addtocart',
+            type: 'POST',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                id: itemId
+            }),
+            success: function (response) {
+                alert("Number of Items in cart: " + response['cart_quantity']);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    });
 }
