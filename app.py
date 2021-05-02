@@ -107,7 +107,7 @@ def signUp():
                 # flash('UserName already exists!!')
                 return json.dumps({"message": "User already exists"})
         else:
-            return json.dumps({"error": "Invalid Credentials"})
+            return json.dumps({"message": "Invalid Credentials"})
 
 
 # SignIn feature
@@ -225,6 +225,28 @@ def addToCart():
 def getCart():
     email = session.get('email')
     response = cart.find_one({'email': email})
+    old_customer_items = response['items']
+    new_customer_items = []
+    new_subtotal = 0.0
+    new_grandtotal = 0.0
+    for item in old_customer_items:
+        menu_item = menu.find_one({'_id': ObjectId(item['id'])})
+        if menu_item['isAvailable']:
+            new_customer_items.append(item)
+            new_subtotal += float(item['price']) * int(item['quantity'])
+    
+    new_tax = round(0.15*new_subtotal,2)
+    new_grandtotal = new_tax +  new_subtotal
+
+    newvalues = {"$set": {
+                'items': new_customer_items,
+                'subtotal':new_subtotal,
+                'tax':new_tax,
+                'total':new_grandtotal
+                }
+            }
+    cart.update_one({'email': email},newvalues)
+    response['items'] = new_customer_items
     response['_id'] = str(response['_id'])
     return json.dumps(response)
 
