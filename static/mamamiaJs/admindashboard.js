@@ -40,6 +40,15 @@ $(document).ready(function () {
                 });
             });
 
+            $('#searchForm').submit(function () {
+                computeSearchAndFilter()
+            });
+
+            $('#categorySelect').change(function () {
+                computeSearchAndFilter()
+            });
+
+            createNewMenuItem()
             performAdminOperations()
         },
         error: function (error) {
@@ -116,10 +125,72 @@ function populateMenuItems(data) {
     var currPageId = 'btnPage' + pageNumber
     var currPage = document.getElementById(currPageId)
     $(".curr-page-number").removeClass("curr-page-number-active");
-    currPage.classList.add("curr-page-number-active");
+    $(".curr-page-number-sf").removeClass("curr-page-number-active");
+    if (currPage) {
+        currPage.classList.add("curr-page-number-active");
+    }
 }
 
-function performAdminOperations() {
+function pageLinksSearchFilter(data) {
+    $(".pagination-links").html('');
+    var totalPages = data['totalItems'] / data['pageSize']
+    if (data['totalItems'] % data['pageSize'] != 0) {
+        totalPages += 1
+    }
+    for (var i = 1; i <= totalPages; i++) {
+        var currPageHtml = `<button id="btnPage` + i + `" class="btn hvr-hover curr-page-number-sf" type="submit">` + i + `</button>`
+        $(".pagination-links").append(currPageHtml);
+    }
+}
+
+function computeSearchAndFilter() {
+    search_string = $('#searchForm').serialize().split("=")[1]
+    category = $('#categorySelect').val()
+    if (search_string == "" && category == "All") {
+        location.reload()
+    }
+    $.ajax({
+        url: '/searchAndFilter',
+        data: { 'search': search_string, 'category': category, 'page': 1 },
+        contentType: "application/json",
+        dataType: "json",
+        type: 'GET',
+        success: function (data) {
+            pageLinksSearchFilter(data)
+            populateMenuItems(data)
+            performAdminOperations()
+            $('.curr-page-number-sf').click(function () {
+                var selId = $(this).attr('id')
+                selId = parseInt(selId.substring(7))
+                search_string = $('#searchForm').serialize().split("=")[1]
+                category = $('#categorySelect').val()
+                if (search_string == "" && category == "All") {
+                    location.reload()
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '/searchAndFilter',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: { 'search': search_string, 'category': category, 'page': selId },
+                    success: function (data) {
+                        populateMenuItems(data)
+                        performAdminOperations()
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            });
+        },
+        error: function (error) {
+            console.log(error)
+        }
+
+    });
+}
+
+function createNewMenuItem() {
 
     $('.new-menu-item').click(function () {
         $('#newMenuItemPopup').modal('show');
@@ -188,6 +259,9 @@ function performAdminOperations() {
             });
         }
     });
+}
+
+function performAdminOperations() {
 
     $('.edit-menu-item-btn').click(function () {
         var selId = $(this).attr('id')
