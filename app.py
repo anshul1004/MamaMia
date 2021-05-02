@@ -236,7 +236,7 @@ def getCart():
             new_subtotal += float(item['price']) * int(item['quantity'])
     
     new_tax = round(0.15*new_subtotal,2)
-    new_grandtotal = new_tax +  new_subtotal
+    new_grandtotal = round(new_tax +  new_subtotal,2)
 
     newvalues = {"$set": {
                 'items': new_customer_items,

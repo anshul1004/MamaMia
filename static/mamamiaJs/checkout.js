@@ -76,6 +76,7 @@ $(document).ready(function(){
                             datatype:'JSON',
                             success: function(response) {
                                 console.log(response)
+                                alert("Order Placed Succesfully");
                                 window.location.href = "/dashboard";
                             },
                             error: function(error) {
