@@ -15,14 +15,14 @@ $(document).ready(function(){
             if (items != undefined) {
                 for(i=0;i<items.length;i++){
                     console.log(items[i]);
-                    var item_id = items[i].id;
                     // var image = items[i].image;
+                    var id = items[i].id;
                     var item_name = items[i].name;
                     var price = items[i].price;
                     var quantity = items[i].quantity;
                     total = (parseFloat(price).toFixed(2)*parseInt(quantity)).toString();
                     console.log(total);
-                    var data = ' <tr class="cartItem" id=row-'+ i +'>' +
+                    var data = ' <tr class="cartItem" id=row-'+ i +'-'+id+'>' +
                         '<td >' +
                             '<p>'+(i+1)+'</p>' +
                         '</td>'+
@@ -40,13 +40,15 @@ $(document).ready(function(){
                             '<p>'+total+'</p>'+
                         '</td>'+
                         '<td class="remove-pr">'+
-                            '<button class="deleteButton" type="button" id=deletebutton-'+i+'>'+
+                            '<button class="deleteButton" type="button" id=deletebutton-'+i+'-'+id+'>' +
                                 '<i class="fas fa-times"></i>'+
                             '</button>'+
                         '</td>'+
                     '</tr>';
                     $("#cart-table-body").append(data);
                 }
+
+
             }
             var subtotal = 0;
                 
@@ -82,10 +84,12 @@ $(document).ready(function(){
                 $('.deleteButton').on('click', function () {
                     var editButtonid = $(this).attr('id');
                     var id = editButtonid.split("-");
+                    var cart_item_id = id[2];
                     // remove this item from cart 
                     var itemRow = $(this).parent().parent();
                     itemRow.remove();
-                    cart.items.splice(id[1],1);
+                    var cart_index_to_remove = cart.items.findIndex(i => i.id == cart_item_id)
+                    cart.items.splice(cart_index_to_remove,1);
                     recalculateCart();
                 });
             });
