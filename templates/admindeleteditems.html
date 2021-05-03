@@ -28,14 +28,14 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css">
 
-    <link rel="stylesheet" href="../static/mamamiaCss/admindashboard.css">
+    <link rel="stylesheet" href="../static/mamamiaCss/admindeleteditems.css">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
 
-    <script src="../static/mamamiaJs/admindashboard.js"></script>
+    <script src="../static/mamamiaJs/admindeleteditems.js"></script>
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -102,111 +102,6 @@
     </header>
     <!-- End Main Top -->
 
-    <!-- Add New Menu Item Popup -->
-    <div class="modal fade" id="newMenuItemPopup" role="dialog" aria-labelledby="newMenuPopupTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newMenuItemModalLongTitle">New Menu Item</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-new-menu-item" id="formNewMenuItem" name="formNewMenuItem"
-                        enctype="multipart/form-data">
-                        <label for="newMenuItemName" class="control-label">Name</label>
-                        <input type="name" name="name" id="newMenuItemName" class="form-control"
-                            placeholder="Enter Name" required />
-                        <p id="newMenuItemNameError" class="helper-text-invisible">Please enter Name!</p>
-                        <label for="newMenuItemCategory">Category</label>
-                        <select class="form-control" id="newMenuItemCategory" name="category">
-                            <option>Appetizer</option>
-                            <option>Pasta</option>
-                            <option>Pizza</option>
-                            <option>Chicken</option>
-                            <option>Steak</option>
-                            <option>Seafood</option>
-                            <option>Sandwich</option>
-                            <option>Salad</option>
-                            <option>Dessert</option>
-                            <option>Wine</option>
-                            <option>Beverage</option>
-                        </select>
-                        <label for="newMenuItemDescription" class="control-label">Description</label>
-                        <textarea name="description" id="newMenuItemDescription" class="form-control"
-                            placeholder="Add Description"> </textarea>
-                        <label for="newMenuItemPrice" class="control-label">Price ($)</label>
-                        <input type="name" name="price" id="newMenuItemPrice" class="form-control"
-                            placeholder="Enter Price" required />
-                        <p id="newMenuItemPriceError" class="helper-text-invisible">Please enter correct Price!</p>
-                        <label for="newMenuItemImage" class="control-label">Upload Image</label>
-                        <input type="file" name="image" class="form-control-file" id="newMenuItemImage">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn hvr-hover new-menu-item-cancel" data-dismiss="modal">Close</button>
-                    <button id="newMenuItemSaveChanges" type="submit"
-                        class="btn hvr-hover new-menu-item-save-changes">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Menu Item Popup -->
-    <div class="modal fade" id="editMenuItemPopup" role="dialog" aria-labelledby="editMenuPopupTitle"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editMenuItemModalLongTitle">Edit Menu Item</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-edit-menu-item" id="formEditMenuItem" name="formEditMenuItem"
-                        enctype="multipart/form-data">
-                        <input type="hidden" name="id" id="editMenuItemId" class="form-control" />
-                        <label for="editMenuItemName" class="control-label">Name</label>
-                        <input type="name" name="name" id="editMenuItemName" class="form-control"
-                            placeholder="Enter Name" required />
-                        <p id="editMenuItemNameError" class="helper-text-invisible">Please enter Name!</p>
-                        <label for="editMenuItemCategory">Category</label>
-                        <select class="form-control" id="editMenuItemCategory" name="category">
-                            <option>Appetizer</option>
-                            <option>Pasta</option>
-                            <option>Pizza</option>
-                            <option>Chicken</option>
-                            <option>Steak</option>
-                            <option>Seafood</option>
-                            <option>Sandwich</option>
-                            <option>Salad</option>
-                            <option>Dessert</option>
-                            <option>Wine</option>
-                            <option>Beverage</option>
-                        </select>
-                        <label for="editMenuItemDescription" class="control-label">Description</label>
-                        <textarea name="description" id="editMenuItemDescription" class="form-control"
-                            placeholder="Add Description"> </textarea>
-                        <label for="editMenuItemPrice" class="control-label">Price ($)</label>
-                        <input type="name" name="price" id="editMenuItemPrice" class="form-control"
-                            placeholder="Enter Price" required />
-                        <p id="editMenuItemPriceError" class="helper-text-invisible">Please enter correct Price!</p>
-                        <label for="editMenuItemImage" class="control-label">Upload Image</label>
-                        <input type="file" name="image" class="form-control-file" id="editMenuItemImage">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn hvr-hover edit-menu-item-cancel"
-                        data-dismiss="modal">Close</button>
-                    <button id="editMenuItemSaveChanges" type="submit"
-                        class="btn hvr-hover edit-menu-item-save-changes">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Start Shop Page  -->
     <div class="shop-box-inner">
         <div class="container">
@@ -244,8 +139,7 @@
                     <div class="right-product-box">
                         <div class="product-item-filter row">
                             <div class="col-12 col-sm-8 text-center text-sm-left">
-                                <button class="btn hvr-hover new-menu-item" type="submit">New Menu Item</button>
-                                <p>Admin Dashboard</p>
+                                <p>View Deleted Items</p>
                             </div>
                             <div class="col-12 col-sm-4 text-center text-sm-right">
                                 <ul class="nav nav-tabs ml-auto">

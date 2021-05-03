@@ -68,6 +68,15 @@ def userHome():
             return render_template('userdashboard.html')
     return render_template('index.html')
 
+
+@app.route("/menuDeletedItems")
+def menuDeletedItems():
+    if 'email' in session:
+        if 'isAdmin' in session:
+            return render_template('admindeleteditems.html')
+    return render_template('signin.html')
+
+
 # SignUp feature
 # If already user exists in backend show message
 # else register the user
@@ -426,6 +435,24 @@ def deleteUser(id):
     return json.dumps({'message': 'User deleted successfully !'})
 
 
+# Read - List all Deleted Menu items
+@app.route("/menuShowDeletedItems")
+def getMenuShowDeletedItems():
+    items = []
+    query = { "isAvailable": False }
+    page_num = int(request.args.get("page"))
+    skips = PAGINATION_RESULTS_SIZE * (page_num - 1)
+
+    for record in menu.find(query).skip(skips).limit(PAGINATION_RESULTS_SIZE):
+        record['_id'] = str(record['_id'])
+        items.append(record)
+
+    total_items = menu.find(query).count()
+    response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
+
+    return json.dumps(response)
+
+
 # Read - List all Menu items
 @app.route("/menu")
 def getMenu():
@@ -566,6 +593,31 @@ def searchAndFilter():
 
     response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
     return json.dumps(response)
+
+
+@app.route("/searchAndFilterDeletedItems", methods=['GET'])
+def searchAndFilterDeletedItems():
+    search= request.args.get('search')
+    category = request.args.get('category')
+    page_num = int(request.args.get('page'))
+    skips = PAGINATION_RESULTS_SIZE * (page_num - 1)
+
+    if search == "" or search == None:
+        results = menu.find({'category': category, 'isAvailable': False})
+    elif category == "All":
+        results = menu.find({ "$or":[ {'name': {'$regex': search, '$options': 'i'}}, {'description': {'$regex': search, '$options': 'i'}}], 'isAvailable': False })
+    else:
+        results = menu.find({ "$or":[ {'name': {'$regex': search, '$options': 'i'}}, {'description': {'$regex': search, '$options': 'i'}}], 'category': category, 'isAvailable': False })
+
+    total_items = results.count()
+    items = []
+    for record in results.skip(skips).limit(PAGINATION_RESULTS_SIZE):
+        record['_id'] = str(record['_id'])
+        items.append(record)
+
+    response = {"totalItems": total_items, "pageNumber": page_num, "pageSize": PAGINATION_RESULTS_SIZE, "items": items}
+    return json.dumps(response)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
